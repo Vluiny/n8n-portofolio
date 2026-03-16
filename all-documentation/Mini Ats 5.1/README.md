@@ -206,6 +206,256 @@ Based on production usage:
 
 ---
 
+---
+
+## ⏰ Scheduled Ranking & Top 3 Selection
+
+Every 3 days, the system automatically re-evaluates all candidates and selects the top 3 for each job position.
+
+### Schedule Trigger
+![Schedule Trigger](../assets/screenshots/ats-schedule-trigger.png)
+*Workflow runs every 3 days at 08:00 AM*
+
+Configuration:
+```json
+{
+  "rule": {
+    "interval": [
+      {
+        "daysInterval": 3,
+        "triggerAtHour": 8
+      }
+    ]
+  }
+}
+```
+
+---
+
+### Fetch All Job Positions
+![Get Job Positions](../assets/screenshots/ats-get-jobs.png)
+*Retrieves all active job positions from the database*
+
+---
+
+### Get Candidates Per Job
+![Get Candidates](../assets/screenshots/ats-get-candidates.png)
+*Fetches all candidates for each job position*
+
+---
+
+### Filter Qualified Candidates (Score ≥ 70)
+![Qualified Filter](../assets/screenshots/ats-qualified-filter.png)
+*Only candidates with overall_score ≥ 70 are processed further*
+
+---
+
+### Sort & Limit Top 15
+![Sort Candidates](../assets/screenshots/ats-sort-candidates.png)
+*Candidates are sorted by overall_score (highest to lowest) and top 15 are selected*
+
+---
+
+### AI Strategic Ranking
+![AI Strategic Ranking](../assets/screenshots/ats-ai-ranking.png)
+
+**System Prompt:**
+```
+You are an AI HR Strategic Decision Engine.
+
+Return EXACTLY ONE valid JSON object:
+{
+  "top_3": [
+    {
+      "candidate_id": "string",
+      "job_id": "string",
+      "candidate_NAME": "string",
+      "rank": number,
+      "strategic_reason": "string",
+      "decision_score": number
+    }
+  ],
+  "ranking_summary": "string",
+  "strategic_summary": "string",
+  "hiring_recommendation": "Conservative | Balanced | Aggressive"
+}
+```
+
+**Rules:**
+- Only include top 3 candidates
+- Rank must be 1, 2, 3
+- decision_score must be numeric
+- Pure JSON output only
+
+---
+
+### Parse Ranking Results
+![Ranking Parser](../assets/screenshots/ats-ranking-parser.png)
+*Processes the JSON output from AI and prepares it for database storage*
+
+---
+
+### Split Out Top 3 Candidates
+![Split Out](../assets/screenshots/ats-split-out.png)
+*Splits the top_3 array into separate items for individual processing*
+
+---
+
+### Get Complete Candidate Data
+![Get Candidate Data](../assets/screenshots/ats-get-candidate-data.png)
+*Retrieves complete candidate details from the database*
+
+---
+
+### Clean Old Temporary Data
+![Delete Temp](../assets/screenshots/ats-delete-temp.png)
+*Removes temporary data from the previous ranking cycle*
+
+---
+
+### Store in Temporary Table
+![Insert Temp](../assets/screenshots/ats-insert-temp.png)
+*Stores ranking results temporarily in the temp_top_candidate table*
+
+---
+
+### Merge with Anchor
+![Merge Anchor](../assets/screenshots/ats-merge-anchor.png)
+*Merges with anchor data to ensure all items are processed correctly*
+
+---
+
+### Get Existing Top Candidates
+![Get Existing Top](../assets/screenshots/ats-get-existing-top.png)
+*Retrieves existing top candidate data for comparison*
+
+---
+
+### Check if Top 3 Exists
+![Check Top 3](../assets/screenshots/ats-check-top3.png)
+*Checks if there are already 3 selected candidates*
+
+---
+
+### Delete Old Top Candidates
+![Delete Old Top](../assets/screenshots/ats-delete-old-top.png)
+*Deletes previous top candidate data from the main table*
+
+---
+
+### Insert New Top Candidates
+![Insert New Top](../assets/screenshots/ats-insert-new-top.png)
+*Stores the new top 3 candidates in the top_candidate table*
+
+---
+
+### Update Job Position Stats
+![Update Job Stats](../assets/screenshots/ats-update-job-stats.png)
+*Updates statistics in the job_positions table (candidate count, last ranked at)*
+
+---
+
+### Log Ranking Activity
+![Ranking Log](../assets/screenshots/ats-ranking-log.png)
+*Records all ranking activities in the ranking_log table*
+
+Fields recorded:
+- `job_id`
+- `total_candidates`
+- `elite_candidates` (score ≥ 70)
+- `ranking_summary`
+- `strategic_summary`
+- `hiring_recommendation`
+- `ranking_stability`
+- `cycle_number`
+- `confidence`
+
+---
+
+### Check Ranking Stability
+![Stability Check](../assets/screenshots/ats-stability-check.png)
+*Compares with the previous cycle to identify changes*
+
+**Stability Categories:**
+- **First Cycle** - Never ranked before
+- **Stable** - Top candidate remains the same as previous cycle
+- **Shifting** - Top candidate has changed
+
+---
+
+### Calculate Hiring Urgency
+![Hiring Urgency](../assets/screenshots/ats-hiring-urgency.png)
+*Determines hiring urgency based on the number of elite candidates*
+
+| Elite Candidates | Urgency |
+|-----------------|---------|
+| ≤ 1 | High |
+| ≤ 3 | Medium |
+| > 3 | Low |
+
+---
+
+### Get Previous Ranking Log
+![Previous Log](../assets/screenshots/ats-previous-log.png)
+*Retrieves previous ranking data for comparison*
+
+---
+
+### Determine Confidence Level
+![Confidence Level](../assets/screenshots/ats-confidence.png)
+
+**Confidence Logic:**
+- **High** - Stable ranking, enough candidates
+- **Medium** - Shifting but enough candidates
+- **Low** - Insufficient elite candidates
+
+---
+
+### Complete Ranking Log Entry
+![Complete Log](../assets/screenshots/ats-complete-log.png)
+*Saves all ranking data to the database*
+
+---
+
+## 🎯 **Business Impact of Scheduled Ranking**
+
+| Feature | Benefit |
+|---------|---------|
+| **Every 3 days ranking** | Always up-to-date candidate evaluation |
+| **Top 3 selection** | Focus only on the best candidates |
+| **Strategic AI reasoning** | Not just scores, but business context |
+| **Stability tracking** | Know if top candidates are consistent |
+| **Hiring recommendation** | Conservative, Balanced, or Aggressive |
+| **Confidence scoring** | Know how reliable the ranking is |
+
+---
+
+## 🔄 **Complete Ranking Flow Summary**
+
+```
+Schedule Trigger (Every 3 days)
+    ↓
+Get All Jobs
+    ↓
+For Each Job:
+    ↓
+Get Candidates → Filter (Score ≥70) → Sort → Top 15
+    ↓
+AI Strategic Ranking → Top 3 Selection
+    ↓
+Get Complete Candidate Data
+    ↓
+Clean Old Data → Insert New Top 3
+    ↓
+Update Job Stats
+    ↓
+Log Ranking Activity
+    ↓
+Check Stability → Calculate Urgency → Determine Confidence
+    ↓
+Save Complete Log
+```
+
 ## ⚙️ Setup Guide
 
 ### Prerequisites
