@@ -20,7 +20,7 @@
 
 Complete flow from job application form submission to candidate ranking.
 
-![ATS Full Workflow](../assets/screenshots/ats-full.png)
+![ATS Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20214935.png)
 
 **Main Flow:**
 1. **Tally Form** collects applicant data and CV
@@ -37,7 +37,7 @@ Complete flow from job application form submission to candidate ranking.
 
 Applications are submitted via Tally Forms and trigger the workflow automatically.
 
-![Tally Trigger](../assets/screenshots/ats-tally-trigger.png)
+![Tally Trigger](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223857.png)
 
 **Data Collected:**
 - Name
@@ -47,7 +47,7 @@ Applications are submitted via Tally Forms and trigger the workflow automaticall
 
 The Edit Fields node structures this data for the workflow:
 
-![Edit Fields](../assets/screenshots/ats-edit-fields.png)
+![Edit Fields](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223923.png)
 
 ---
 
@@ -55,10 +55,10 @@ The Edit Fields node structures this data for the workflow:
 
 The CV is downloaded from the Tally URL and text is extracted.
 
-![HTTP Request](../assets/screenshots/ats-http-request.png)
+![HTTP Request](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223943.png)
 *HTTP Request node downloads the PDF file*
 
-![Extract from File](../assets/screenshots/ats-extract-file.png)
+![Extract from File](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223952.png)
 *Extract from File node converts PDF to plain text*
 
 ---
@@ -67,7 +67,7 @@ The CV is downloaded from the Tally URL and text is extracted.
 
 The system fetches job requirements from Supabase based on the position selected.
 
-![Get Job Row](../assets/screenshots/ats-get-job.png)
+![Get Job Row](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224107.png)
 
 **Job Data Retrieved:**
 - Required skills
@@ -77,7 +77,7 @@ The system fetches job requirements from Supabase based on the position selected
 
 This data is merged with the extracted CV text:
 
-![Merge Node](../assets/screenshots/ats-merge.png)
+![Merge Node](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224218.png)
 
 ---
 
@@ -85,7 +85,7 @@ This data is merged with the extracted CV text:
 
 An AI agent extracts structured information from the raw CV text.
 
-![AI Extraction Agent](../assets/screenshots/ats-ai-extraction.png)
+![AI Extraction Agent](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224153.png)
 
 **System Prompt:**
 ```
