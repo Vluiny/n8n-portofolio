@@ -25,25 +25,27 @@ An automated email support system that uses **multiple AI models** to classify, 
 | ✅ SLA management & escalation | |
 
 #### 📸 **Workflow Overview**
-![AI Email Support - Full Workflow](./assets/screenshots/email-support-full.png)
+![AI Email Support - Full Workflow](assets/screenshots/email-support-full.png)
 *Complete system flow from trigger to response*
 
 #### 📸 **AI Classification Node**
-![AI Classification Node](./assets/screenshots/email-support-classification.png)
+![AI Classification Node](assets/screenshots/email-support-classification.png)
 *AI node performing intent, urgency, and sentiment analysis*
 
 #### 📸 **Priority Scoring Logic**
-![Priority Scoring](./assets/screenshots/email-support-scoring.png)
+![Priority Scoring](assets/screenshots/email-support-scoring.png)
 *Custom JavaScript calculating priority scores and determining SLA*
 
 #### 📸 **Response Generation**
-![AI Response](./assets/screenshots/email-support-response.png)
+![AI Response](assets/screenshots/email-support-response.png)
 *AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
 - ⏱️ **Response time reduced** from 24 hours → 5 minutes
 - 🎯 **94% classification accuracy**
 - 💰 **Support team workload reduced by 70%**
+
+[→ View Full Documentation](ai-email-support/README.md)
 
 ---
 
@@ -61,25 +63,27 @@ An automated recruitment system that processes job applications, extracts data f
 | ✅ Strategic hiring recommendations | • Google Sheets |
 
 #### 📸 **Full Workflow Architecture**
-![ATS Full Workflow](./assets/screenshots/ats-full.png)
+![ATS Full Workflow](assets/screenshots/ats-full.png)
 *Complete flow from form submission to ranking*
 
 #### 📸 **Resume Extraction Process**
-![PDF Extraction](./assets/screenshots/ats-extraction.png)
+![PDF Extraction](assets/screenshots/ats-extraction.png)
 *Download PDF from Tally and extract text content*
 
 #### 📸 **AI Information Extraction**
-![AI Extraction](./assets/screenshots/ats-ai-extraction.png)
+![AI Extraction](assets/screenshots/ats-ai-extraction.png)
 *AI extracts name, skills, experience, and education from resumes*
 
 #### 📸 **Candidate Scoring & Ranking**
-![Candidate Ranking](./assets/screenshots/ats-ranking.png)
+![Candidate Ranking](assets/screenshots/ats-ranking.png)
 *AI compares candidates against job requirements and provides rankings*
 
 #### **Business Impact:**
 - ⏱️ **Screening time reduced** from 2 hours → 2.5 minutes per CV
 - 📊 **200+ candidates** processed weekly
 - 🎯 **Interview conversion increased by 35%**
+
+[→ View Full Documentation](mini-ats/README.md)
 
 ---
 
@@ -97,25 +101,27 @@ A multi-channel system that captures leads from various sources, performs automa
 | ✅ Auto-followup sequences | • Supabase |
 
 #### 📸 **Multi-Channel Triggers**
-![Multi-Channel](./assets/screenshots/ops-triggers.png)
+![Multi-Channel](assets/screenshots/ops-triggers.png)
 *Triggers from Gmail, Telegram, and Tally Forms unified in one system*
 
 #### 📸 **AI Lead Scoring**
-![Lead Scoring](./assets/screenshots/ops-scoring.png)
+![Lead Scoring](assets/screenshots/ops-scoring.png)
 *AI scores leads based on email domain, message quality, and source*
 
 #### 📸 **Slack Routing Logic**
-![Slack Routing](./assets/screenshots/ops-routing.png)
+![Slack Routing](assets/screenshots/ops-routing.png)
 *Leads routed to different channels based on score (Hot: ≥80, Warm: ≥60)*
 
 #### 📸 **Message Classification**
-![Message Classification](./assets/screenshots/ops-classification.png)
+![Message Classification](assets/screenshots/ops-classification.png)
 *AI categorizes messages into sales/support/billing/other*
 
 #### **Business Impact:**
 - 📈 **Hot lead response time** < 2 minutes
 - 🎯 **88% scoring accuracy**
 - 💰 **Conversion rate increased by 40%**
+
+[→ View Full Documentation](lead-ops/README.md)
 
 ---
 
@@ -151,7 +157,7 @@ have been **removed or anonymized** to protect client privacy and system securit
 
 Interested in discussing your automation needs?
 
-- **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
+- **LinkedIn**: https://linkedin.com/in/restu-pambudi-6b190a386
 - **Email**: fuadsparta619@gmail.com
 
 ---
@@ -159,13 +165,13 @@ Interested in discussing your automation needs?
 ## 📸 **All Workflow Screenshots**
 
 ### AI Email Support System
-![Email Support](./assets/screenshots/email-support-full.png)
+![Email Support](assets/screenshots/email-support-full.png)
 
 ### ATS System
-![ATS](./assets/screenshots/ats-full.png)
+![ATS](assets/screenshots/ats-full.png)
 
 ### OPS Lead Management
-![OPS](./assets/screenshots/ops-full.png)
+![OPS](assets/screenshots/ops-full.png)
 
 ---
 
