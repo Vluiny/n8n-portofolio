@@ -62,19 +62,19 @@ An automated recruitment system that processes job applications, extracts data f
 | ✅ Strategic hiring recommendations | • Google Sheets |
 
 #### 📸 **Full Workflow Architecture**
-![ATS Full Workflow](assets/screenshots/ats-full.png)
+![ATS Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/ae4ce0c9f8967d997c4b54f9214db9eddc673f63/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20214935.png)
 *Complete flow from form submission to ranking*
 
 #### 📸 **Resume Extraction Process**
-![PDF Extraction](assets/screenshots/ats-extraction.png)
+![PDF Extraction](https://github.com/Vluiny/n8n-portofolio/blob/ae4ce0c9f8967d997c4b54f9214db9eddc673f63/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20215129.png)
 *Download PDF from Tally and extract text content*
 
 #### 📸 **AI Information Extraction**
-![AI Extraction](assets/screenshots/ats-ai-extraction.png)
+![AI Extraction](https://github.com/Vluiny/n8n-portofolio/blob/ae4ce0c9f8967d997c4b54f9214db9eddc673f63/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20215141.png)
 *AI extracts name, skills, experience, and education from resumes*
 
 #### 📸 **Candidate Scoring & Ranking**
-![Candidate Ranking](assets/screenshots/ats-ranking.png)
+![Candidate Ranking](https://github.com/Vluiny/n8n-portofolio/blob/ae4ce0c9f8967d997c4b54f9214db9eddc673f63/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20215208.png)
 *AI compares candidates against job requirements and provides rankings*
 
 #### **Business Impact:**
