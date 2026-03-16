@@ -24,7 +24,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 | ✅ SLA management & escalation | |
 
 #### 📸 **Workflow Overview**
-![AI Email Support - Full Workflow]((https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173427.png))
+![AI Email Support - Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/45294978e39f41f150a4173507a30fe7e2e25b7d/Screenshot/Screenshot%202026-03-16%20173427.png)
 *Complete system flow from trigger to response*
 
 #### 📸 **AI Classification Node**
@@ -36,7 +36,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 *Custom JavaScript calculating priority scores and determining SLA*
 
 #### 📸 **Response Generation**
-![AI Response](https://github.com/Vluiny/n8n-portofolio/tree/2f421181e650443bea93a879114e090312afadcb/all-documentation/ai-email-support)
+![AI Response](https://github.com/Vluiny/n8n-portofolio/blob/45294978e39f41f150a4173507a30fe7e2e25b7d/Screenshot/Screenshot%202026-03-16%20173348.png)
 *AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
