@@ -44,7 +44,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 - 🎯 **94% classification accuracy**
 - 💰 **Support team workload reduced by 70%**
 
-[→ View Full Documentation](ai-email-support/README.md)
+[→ View Full Documentation]([ai-email-support/README.md](https://github.com/Vluiny/n8n-portofolio/tree/2f421181e650443bea93a879114e090312afadcb/all-documentation/ai-email-support))
 
 ---
 
