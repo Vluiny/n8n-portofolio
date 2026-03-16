@@ -2,10 +2,10 @@
 
 > *"Showcasing enterprise-grade automation workflows without exposing the code"*
 
-Halo! Saya adalah **automation specialist** yang membangun sistem kompleks menggunakan [n8n](https://n8n.io/). Repository ini adalah **portofolio visual** dari workflow production yang telah saya kembangkan.
+Hello! I'm an **automation specialist** who builds complex systems using [n8n](https://n8n.io/). This repository is a **visual portfolio** of production workflows I have developed.
 
-**⚠️ CATATAN PENTING:**  
-Saya **TIDAK** menyertakan file JSON workflow di repository ini untuk melindungi intellectual property klien dan menjaga keamanan sistem production. Yang Anda lihat di sini adalah **dokumentasi dan screenshot** dari sistem yang berjalan.
+**⚠️ IMPORTANT NOTE:**  
+I do **NOT** include workflow JSON files in this repository to protect client intellectual property and maintain production system security. What you see here is **documentation and screenshots** of live, running systems.
 
 ---
 
@@ -13,115 +13,115 @@ Saya **TIDAK** menyertakan file JSON workflow di repository ini untuk melindungi
 
 ### 1. 🤖 **AI-Powered Email Support Automation**
 
-Sistem support email otomatis yang menggunakan **multiple AI models** untuk mengklasifikasi, memprioritaskan, dan merespon email pelanggan.
+An automated email support system that uses **multiple AI models** to classify, prioritize, and respond to customer emails.
 
-| **Fitur Utama** | **Tech Stack** |
+| **Key Features** | **Tech Stack** |
 |-----------------|----------------|
 | ✅ Spam/phishing detection | • Gmail API |
 | ✅ Intent classification (sales/support/complaint) | • Groq (Llama 3.3 70B) |
-| ✅ Priority scoring otomatis | • Google Gemini |
+| ✅ Automatic priority scoring | • Google Gemini |
 | ✅ Customer history tracking | • Supabase |
 | ✅ AI response generation | • Custom scoring algorithm |
 | ✅ SLA management & escalation | |
 
 #### 📸 **Workflow Overview**
 ![AI Email Support - Full Workflow](./assets/screenshots/email-support-full.png)
-*Seluruh alur sistem dari trigger hingga response*
+*Complete system flow from trigger to response*
 
 #### 📸 **AI Classification Node**
 ![AI Classification Node](./assets/screenshots/email-support-classification.png)
-*Node AI yang melakukan analisis intent, urgency, dan sentiment*
+*AI node performing intent, urgency, and sentiment analysis*
 
 #### 📸 **Priority Scoring Logic**
 ![Priority Scoring](./assets/screenshots/email-support-scoring.png)
-*Custom JavaScript untuk menghitung priority score dan menentukan SLA*
+*Custom JavaScript calculating priority scores and determining SLA*
 
 #### 📸 **Response Generation**
 ![AI Response](./assets/screenshots/email-support-response.png)
-*AI menghasilkan response profesional berdasarkan konteks percakapan*
+*AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
-- ⏱️ **Response time turun** dari 24 jam → 5 menit
-- 🎯 **Akurasi klasifikasi** 94%
-- 💰 **Beban tim support turun** 70%
+- ⏱️ **Response time reduced** from 24 hours → 5 minutes
+- 🎯 **94% classification accuracy**
+- 💰 **Support team workload reduced by 70%**
 
 ---
 
 ### 2. 📄 **AI-Powered ATS System (Mini ATS 5.1)**
 
-Sistem rekrutmen otomatis yang memproses lamaran kerja, mengekstrak data dari CV PDF, dan meranking kandidat menggunakan AI.
+An automated recruitment system that processes job applications, extracts data from PDF resumes, and ranks candidates using AI.
 
-| **Fitur Utama** | **Tech Stack** |
+| **Key Features** | **Tech Stack** |
 |-----------------|----------------|
 | ✅ Tally form integration | • Tally Forms API |
 | ✅ PDF resume extraction | • HTTP Request |
 | ✅ Skill extraction & parsing | • PDF extraction node |
 | ✅ Job matching & scoring | • Groq (Llama 3.3 70B) |
-| ✅ Candidate ranking otomatis | • Supabase |
+| ✅ Automatic candidate ranking | • Supabase |
 | ✅ Strategic hiring recommendations | • Google Sheets |
 
 #### 📸 **Full Workflow Architecture**
 ![ATS Full Workflow](./assets/screenshots/ats-full.png)
-*Alur lengkap dari form submission hingga ranking*
+*Complete flow from form submission to ranking*
 
 #### 📸 **Resume Extraction Process**
 ![PDF Extraction](./assets/screenshots/ats-extraction.png)
-*Download PDF dari Tally dan ekstrak teksnya*
+*Download PDF from Tally and extract text content*
 
 #### 📸 **AI Information Extraction**
 ![AI Extraction](./assets/screenshots/ats-ai-extraction.png)
-*AI mengekstrak nama, skill, pengalaman, pendidikan dari resume*
+*AI extracts name, skills, experience, and education from resumes*
 
 #### 📸 **Candidate Scoring & Ranking**
 ![Candidate Ranking](./assets/screenshots/ats-ranking.png)
-*AI membandingkan kandidat dengan job requirements dan memberikan ranking*
+*AI compares candidates against job requirements and provides rankings*
 
 #### **Business Impact:**
-- ⏱️ **Screening time** dari 2 jam → 2.5 menit per CV
-- 📊 **200+ kandidat** diproses per minggu
-- 🎯 **Konversi interview** naik 35%
+- ⏱️ **Screening time reduced** from 2 hours → 2.5 minutes per CV
+- 📊 **200+ candidates** processed weekly
+- 🎯 **Interview conversion increased by 35%**
 
 ---
 
 ### 3. ⚙️ **OPS Lead Management System**
 
-Sistem multi-channel yang menangkap lead dari berbagai sumber, melakukan scoring otomatis, dan merutekan ke tim yang tepat.
+A multi-channel system that captures leads from various sources, performs automatic scoring, and routes them to the appropriate teams.
 
-| **Fitur Utama** | **Tech Stack** |
+| **Key Features** | **Tech Stack** |
 |-----------------|----------------|
 | ✅ Multi-channel ingestion | • Gmail Trigger |
 | ✅ Gmail, Telegram, Tally Forms | • Telegram Bot |
 | ✅ AI lead scoring (1-100) | • Tally Forms |
-| ✅ Smart routing ke Slack | • Groq AI |
+| ✅ Smart Slack routing | • Groq AI |
 | ✅ Lead enrichment & analysis | • Slack API |
 | ✅ Auto-followup sequences | • Supabase |
 
 #### 📸 **Multi-Channel Triggers**
 ![Multi-Channel](./assets/screenshots/ops-triggers.png)
-*Trigger dari Gmail, Telegram, dan Tally Forms dalam satu sistem*
+*Triggers from Gmail, Telegram, and Tally Forms unified in one system*
 
 #### 📸 **AI Lead Scoring**
 ![Lead Scoring](./assets/screenshots/ops-scoring.png)
-*AI memberikan score berdasarkan email domain, message quality, dan source*
+*AI scores leads based on email domain, message quality, and source*
 
 #### 📸 **Slack Routing Logic**
 ![Slack Routing](./assets/screenshots/ops-routing.png)
-*Lead di-rute ke channel berbeda berdasarkan score (Hot: ≥80, Warm: ≥60)*
+*Leads routed to different channels based on score (Hot: ≥80, Warm: ≥60)*
 
 #### 📸 **Message Classification**
 ![Message Classification](./assets/screenshots/ops-classification.png)
-*AI mengkategorikan pesan ke sales/support/billing/other*
+*AI categorizes messages into sales/support/billing/other*
 
 #### **Business Impact:**
-- 📈 **Response time hot lead** < 2 menit
-- 🎯 **Akurasi scoring** 88%
-- 💰 **Conversion rate naik** 40%
+- 📈 **Hot lead response time** < 2 minutes
+- 🎯 **88% scoring accuracy**
+- 💰 **Conversion rate increased by 40%**
 
 ---
 
 ## 🛠️ **Common Tech Stack**
 
-| Teknologi | Penggunaan |
+| Technology | Usage |
 |-----------|------------|
 | **n8n** | Workflow automation platform |
 | **Groq (Llama 3.3 70B)** | Primary AI model |
@@ -135,38 +135,28 @@ Sistem multi-channel yang menangkap lead dari berbagai sumber, melakukan scoring
 
 ---
 
-## 💡 **Key Achievements**
-
-✅ **10,000+** emails diproses otomatis per bulan  
-✅ **5,000+** resume dianalisis dengan akurasi 92%  
-✅ **15,000+** lead di-score dari 3 channel berbeda  
-✅ **Zero data loss** dalam 6 bulan production  
-✅ **Integration dengan 8+ external services**
-
----
-
 ## 🔒 **Security & Privacy Note**
 
-Semua screenshot di repository ini adalah **versi demonstrasi** dari sistem production yang sebenarnya. Data sensitif seperti:
+All screenshots in this repository are **demonstration versions** of actual production systems. Sensitive data such as:
 - Email addresses
 - API keys
 - Database credentials
 - Internal business logic
 
-telah **dihapus atau dianonimisasi** untuk melindungi privasi klien dan keamanan sistem.
+have been **removed or anonymized** to protect client privacy and system security.
 
 ---
 
 ## 📞 **Contact**
 
-Tertarik untuk mendiskusikan automation needs Anda?
+Interested in discussing your automation needs?
 
-- **LinkedIn**: www.linkedin.com/in/restu-pambudi-6b190a386
+- **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
 - **Email**: fuadsparta619@gmail.com
 
 ---
 
-## 📸 **Semua Screenshot Workflow**
+## 📸 **All Workflow Screenshots**
 
 ### AI Email Support System
 ![Email Support](./assets/screenshots/email-support-full.png)
@@ -179,4 +169,4 @@ Tertarik untuk mendiskusikan automation needs Anda?
 
 ---
 
-⭐ **Terima kasih telah mengunjungi portfolio saya!**
+⭐ **Thank you for visiting my portfolio!**
