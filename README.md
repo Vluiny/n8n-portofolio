@@ -36,7 +36,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 *Custom JavaScript calculating priority scores and determining SLA*
 
 #### 📸 **Response Generation**
-![AI Response](https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173348.png)
+![AI Response](https://github.com/Vluiny/n8n-portofolio/tree/2f421181e650443bea93a879114e090312afadcb/all-documentation/ai-email-support)
 *AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
