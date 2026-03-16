@@ -1,18 +1,16 @@
 # 📄 AI-Powered ATS System (Mini ATS 5.1) - Complete Documentation
 
 ## 📋 Table of Contents
-1. [System Architecture](#system-architecture)
-2. [Trigger & Form Integration](#trigger--form-integration)
-3. [PDF Resume Extraction](#pdf-resume-extraction)
-4. [Job Requirement Lookup](#job-requirement-lookup)
-5. [AI Information Extraction](#ai-information-extraction)
-6. [Data Validation](#data-validation)
-7. [AI Candidate Scoring](#ai-candidate-scoring)
-8. [Database Storage](#database-storage)
-9. [Business Impact](#business-impact)
-10. [Setup Guide](#setup-guide)
-
----
+1. System Architecture
+2. Trigger & Form Integration
+3. PDF Resume Extraction
+4. Job Requirement Lookup
+5. AI Information Extraction
+6. Data Validation
+7. AI Candidate Scoring
+8. Database Storage
+9. Business Impact
+10. Setup Guide
 
 ## 🏗️ System Architecture
 
