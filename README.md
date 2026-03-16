@@ -82,7 +82,7 @@ An automated recruitment system that processes job applications, extracts data f
 - 📊 **200+ candidates** processed weekly
 - 🎯 **Interview conversion increased by 35%**
 
-[→ View Full Documentation](mini-ats/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/eb96a669ae0af7d909ee037f939ebc97c34c879c/all-documentation/Mini%20Ats%205.1)
 
 ---
 
