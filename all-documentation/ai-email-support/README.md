@@ -60,7 +60,7 @@ The system retrieves: `From`, `To`, `Subject`, `Body (text)`, `ThreadId`, and `M
 
 Emails are filtered to ensure only legitimate business emails are processed.
 
-![Filter Node](../assets/screenshots/email-support-filter.png)
+![Filter Node](https://github.com/Vluiny/n8n-portofolio/blob/4ae4eb6fc6e35d7a2b567da4a3ec396fd62f2588/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20205321.png)
 
 **Filter Criteria (must meet ALL):**
 - From cannot be empty
@@ -70,7 +70,7 @@ Emails are filtered to ensure only legitimate business emails are processed.
 
 Suspicious emails are flagged using a Text Classifier:
 
-![Text Classifier](../assets/screenshots/email-support-text-classifier.png)
+![Text Classifier](https://github.com/Vluiny/n8n-portofolio/blob/4ae4eb6fc6e35d7a2b567da4a3ec396fd62f2588/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20205154.png)
 
 **Categories:**
 - **SUS** - Phishing/spam attempts → sent to manual review
@@ -82,7 +82,7 @@ Suspicious emails are flagged using a Text Classifier:
 
 The core intelligence: AI analyzes email content and returns structured data.
 
-![AI Classification Node](../assets/screenshots/email-support-ai-classification.png)
+![AI Classification Node](https://github.com/Vluiny/n8n-portofolio/blob/3c9bdc832b656aa2096ba5f12fbedf23c61dde01/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20173241.png)
 
 **AI Output Example:**
 ```json
@@ -98,7 +98,7 @@ The core intelligence: AI analyzes email content and returns structured data.
 
 A confidence check ensures quality:
 
-![Confidence Check](../assets/screenshots/email-support-confidence-check.png)
+![Confidence Check](https://github.com/Vluiny/n8n-portofolio/blob/4ae4eb6fc6e35d7a2b567da4a3ec396fd62f2588/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20205340.png)
 
 - **Confidence > 60** → Continue to database
 - **Confidence ≤ 60** → Send to manual review
@@ -135,7 +135,7 @@ if (budget) score += 25;
 
 Customer records are managed in Supabase.
 
-![Customer Database Flow](../assets/screenshots/email-support-customer-flow.png)
+![Customer Database Flow](https://github.com/Vluiny/n8n-portofolio/blob/e9c5dad3f8e3ed87f5c0b03fd9bd98e5abc3db0f/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20205648.png)
 
 **Process:**
 1. Check if customer email exists
@@ -148,7 +148,7 @@ Customer records are managed in Supabase.
 
 Each email becomes a support case with full tracking.
 
-![Create Support Case](../assets/screenshots/email-support-create-case.png)
+![Create Support Case]()
 
 **Case Fields:**
 - Customer information
@@ -167,7 +167,7 @@ Inbound messages are recorded separately:
 
 The system generates professional, context-aware replies.
 
-![Response Generation](../assets/screenshots/email-support-response-ai.png)
+![Response Generation](https://github.com/Vluiny/n8n-portofolio/blob/e9c5dad3f8e3ed87f5c0b03fd9bd98e5abc3db0f/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20173348.png)
 
 **Response Format:**
 ```json
