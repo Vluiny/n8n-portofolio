@@ -1,4 +1,3 @@
----
 
 ```markdown
 # 🤖 AI-Powered Email Support Automation - Complete Documentation
