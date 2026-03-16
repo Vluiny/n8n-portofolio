@@ -1,5 +1,3 @@
-Saya sangat setuju! Pendekatan yang lebih sederhana justru lebih baik. Ini versi yang **lebih ringkas** dengan format: **Penjelasan singkat → Screenshot di bawahnya**.
-
 ---
 
 ```markdown
