@@ -1,9 +1,89 @@
+# 📄 AI-Powered ATS System (Mini ATS 5.1) - Complete Documentation
+
+## 📋 Table of Contents
+1. [System Architecture](#system-architecture)
+2. [Trigger & Form Integration](#trigger--form-integration)
+3. [PDF Resume Extraction](#pdf-resume-extraction)
+4. [Job Requirement Lookup](#job-requirement-lookup)
+5. [AI Information Extraction](#ai-information-extraction)
+6. [Data Validation](#data-validation)
+7. [AI Candidate Scoring](#ai-candidate-scoring)
+8. [Database Storage](#database-storage)
+9. [Business Impact](#business-impact)
+10. [Setup Guide](#setup-guide)
+
+---
+
+## 🏗️ System Architecture
+
+Complete flow from job application form submission to candidate ranking.
+
+![ATS Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20214935.png)
+
+**Main Flow:**
+1. **Tally Form** collects applicant data and CV
+2. **PDF Extraction** pulls text from resume
+3. **Job Requirements** fetched from database
+4. **AI Extraction** pulls structured data from CV
+5. **Validation** ensures data quality
+6. **AI Scoring** compares candidate with job requirements
+7. **Database** stores all candidate data with scores
+
+---
+
+## 📝 Trigger & Form Integration
+
+Applications are submitted via Tally Forms and trigger the workflow automatically.
+
+![Tally Trigger](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223857.png)
+
+**Data Collected:**
+- Name
+- Email
+- Job position selected
+- CV file URL
+
+The Edit Fields node structures this data for the workflow:
+
+![Edit Fields](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223923.png)
+
+---
+
+## 📄 PDF Resume Extraction
+
+The CV is downloaded from the Tally URL and text is extracted.
+
+![HTTP Request](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223943.png)
+*HTTP Request node downloads the PDF file*
+
+![Extract from File](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20223952.png)
+*Extract from File node converts PDF to plain text*
+
+---
+
+## 🔍 Job Requirement Lookup
+
+The system fetches job requirements from Supabase based on the position selected.
+
+![Get Job Row](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224107.png)
+
+**Job Data Retrieved:**
+- Required skills
+- Minimum years of experience
+- Preferred education
+- Additional criteria
+
+This data is merged with the extracted CV text:
+
+![Merge Node](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224218.png)
+
+---
 
 ## 🤖 AI Information Extraction
 
 An AI agent extracts structured information from the raw CV text.
 
-![AI Extraction Agent](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224153.png)
+![AI Extraction Agent](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224153.png)
 
 **System Prompt:**
 ```
@@ -35,7 +115,7 @@ Return ONLY valid JSON:
 
 A Code node validates and parses the AI output:
 
-![Validation Node](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224252.png)
+![Validation Node](../assets/screenshots/ats-validation.png)
 
 ---
 
@@ -43,7 +123,7 @@ A Code node validates and parses the AI output:
 
 An IF node ensures all required fields are present before proceeding.
 
-![Validation Check](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224315.png)
+![Validation Check](../assets/screenshots/ats-if-check.png)
 
 **Required Fields:**
 - Name
@@ -58,7 +138,7 @@ If any field is missing, the application is flagged for manual review.
 
 A second AI agent compares the candidate against job requirements and provides scores.
 
-![AI Scoring Agent](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224350.png)
+![AI Scoring Agent](../assets/screenshots/ats-ai-scoring.png)
 
 **System Prompt:**
 ```
@@ -82,7 +162,7 @@ Return ONLY valid JSON:
 
 Another Code node parses and processes the scoring output:
 
-![Scoring Parser](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224414.png)
+![Scoring Parser](../assets/screenshots/ats-scoring-parser.png)
 
 **Additional fields added:**
 - `is_qualified`: true if overall_score ≥ 70
@@ -94,7 +174,7 @@ Another Code node parses and processes the scoring output:
 
 All candidate data and AI scores are stored in Supabase.
 
-![Insert Candidate](https://github.com/Vluiny/n8n-portofolio/raw/1913d4e5bc1c190f6c3798e023c557cff5b2a95b/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224432.png)
+![Insert Candidate](../assets/screenshots/ats-insert-candidate.png)
 
 **Table: candidates**
 | Field | Description |
@@ -219,8 +299,8 @@ For questions or custom development:
 ---
 
 ⭐ **Thank you for reviewing this documentation!**
+```
 
----
-| Teks "System Prompt:" | Dihilangkan koma yang salah |
+✅ **Business impact** - Menunjukkan nilai nyata
 
-Sekarang semua gambar akan muncul dengan benar di README-mu! Ada lagi yang perlu diperbaiki?
+Sekarang tinggal ganti nama file screenshot sesuai dengan yang kamu upload! Ada yang perlu ditambahkan?
