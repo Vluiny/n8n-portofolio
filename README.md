@@ -1,6 +1,5 @@
 # 🚀 n8n Production Workflow Portfolio
 
-> *"Showcasing enterprise-grade automation workflows without exposing the code"*
 
 Hello! I'm an **automation specialist** who builds complex systems using [n8n](https://n8n.io/). This repository is a **visual portfolio** of production workflows I have developed.
 
@@ -25,19 +24,19 @@ An automated email support system that uses **multiple AI models** to classify, 
 | ✅ SLA management & escalation | |
 
 #### 📸 **Workflow Overview**
-![AI Email Support - Full Workflow](assets/screenshots/email-support-full.png)
+![AI Email Support - Full Workflow]((https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173427.png))
 *Complete system flow from trigger to response*
 
 #### 📸 **AI Classification Node**
-![AI Classification Node](assets/screenshots/email-support-classification.png)
+![AI Classification Node](https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173241.png)
 *AI node performing intent, urgency, and sentiment analysis*
 
 #### 📸 **Priority Scoring Logic**
-![Priority Scoring](assets/screenshots/email-support-scoring.png)
+![Priority Scoring](https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173257.png)
 *Custom JavaScript calculating priority scores and determining SLA*
 
 #### 📸 **Response Generation**
-![AI Response](assets/screenshots/email-support-response.png)
+![AI Response](https://github.com/Vluiny/n8n-portofolio/blob/a6a2058b5482464c65c6708006bada1333a140d5/Screenshot/Screenshot%202026-03-16%20173348.png)
 *AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
