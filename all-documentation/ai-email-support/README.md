@@ -109,7 +109,7 @@ A confidence check ensures quality:
 
 Custom JavaScript calculates priority scores and determines escalation levels.
 
-![Priority Scoring Node](../assets/screenshots/email-support-scoring.png)
+![Priority Scoring Node](https://github.com/Vluiny/n8n-portofolio/blob/dc43b2f1f00ca99b2b99efda61bb6d1a65d6c830/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20210158.png)
 
 **Scoring Logic:**
 ```javascript
@@ -148,7 +148,7 @@ Customer records are managed in Supabase.
 
 Each email becomes a support case with full tracking.
 
-![Create Support Case]()
+![Create Support Case](https://github.com/Vluiny/n8n-portofolio/blob/dc43b2f1f00ca99b2b99efda61bb6d1a65d6c830/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20210653.png)
 
 **Case Fields:**
 - Customer information
@@ -159,7 +159,7 @@ Each email becomes a support case with full tracking.
 
 Inbound messages are recorded separately:
 
-![Create Support Message](../assets/screenshots/email-support-create-message.png)
+![Create Support Message](https://github.com/Vluiny/n8n-portofolio/blob/dc43b2f1f00ca99b2b99efda61bb6d1a65d6c830/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20210653.png)
 
 ---
 
@@ -167,7 +167,7 @@ Inbound messages are recorded separately:
 
 The system generates professional, context-aware replies.
 
-![Response Generation](https://github.com/Vluiny/n8n-portofolio/blob/e9c5dad3f8e3ed87f5c0b03fd9bd98e5abc3db0f/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20173348.png)
+![Response Generation](https://github.com/Vluiny/n8n-portofolio/blob/f2644ff4744acdf1f2c447abeed85f94ff0b77f4/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20211039.png)
 
 **Response Format:**
 ```json
@@ -179,7 +179,7 @@ The system generates professional, context-aware replies.
 
 The reply is sent via Gmail maintaining the same thread:
 
-![Reply Node](../assets/screenshots/email-support-reply.png)
+![Reply Node](https://github.com/Vluiny/n8n-portofolio/blob/9d8de110e403b88fab8c45daf3cb4e5015ebe72d/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20211209.png)
 
 Outbound messages are also logged in the database.
 
@@ -205,7 +205,7 @@ Cases are flagged for human attention when:
 
 All AI executions are logged for audit and improvement.
 
-![Execution Logs](../assets/screenshots/email-support-execution-logs.png)
+![Execution Logs](https://github.com/Vluiny/n8n-portofolio/blob/9d8de110e403b88fab8c45daf3cb4e5015ebe72d/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20205748.png)
 
 **Logged Data:**
 - Case ID reference
