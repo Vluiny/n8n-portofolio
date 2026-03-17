@@ -1,5 +1,8 @@
 # 🤖 AI-Powered Email Support Automation - Complete Documentation
 
+This project is a simulation of a production-ready AI-powered email automation system, built to demonstrate workflow automation, AI-assisted email processing, and intelligent response handling across various use cases.
+
+**Data Tabels**
 1. System Architecture
 2. Trigger & Email Fetching
 3. Filtering & Spam Detection
