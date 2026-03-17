@@ -1,10 +1,7 @@
 # 🚀 n8n Production Workflow Portfolio
 
 
-Hello! I'm an **automation specialist** who builds complex systems using [n8n](https://n8n.io/). This repository is a **visual portfolio** of production workflows I have developed.
-
-**⚠️ IMPORTANT NOTE:**  
-I do **NOT** include workflow JSON files in this repository to protect client intellectual property and maintain production system security. What you see here is **documentation and screenshots** of live, running systems.
+Hello! I'm an ** Automation Enthusiast** who builds complex systems using [n8n](https://n8n.io/). This repository is a **visual portfolio** of production workflows I have developed.
 
 ---
 
@@ -40,9 +37,9 @@ An automated email support system that uses **multiple AI models** to classify, 
 *AI generates professional responses based on conversation context*
 
 #### **Business Impact:**
-- ⏱️ **Response time reduced** from 24 hours → 5 minutes
-- 🎯 **94% classification accuracy**
-- 💰 **Support team workload reduced by 70%**
+- ⏱️ Designed to reduce response time from hours to minutes through automation
+-🎯 High accuracy email classification using multi-model AI
+-💰 Reduces repetitive support workload through automation
 
 [→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/ai-email-support)
 
@@ -78,9 +75,9 @@ An automated recruitment system that processes job applications, extracts data f
 *AI compares candidates against job requirements and provides rankings*
 
 #### **Business Impact:**
-- ⏱️ **Screening time reduced** from 2 hours → 2.5 minutes per CV
-- 📊 **200+ candidates** processed weekly
-- 🎯 **Interview conversion increased by 35%**
+- ⏱️ Automates CV screening, reducing manual review time significantly
+-📊 Designed to handle large volumes of candidates
+-🎯 Improves candidate filtering consistency using AI scoring
 
 [→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/Mini%20Ats%205.1)
 
@@ -119,9 +116,9 @@ A multi-channel system that captures leads from various sources, performs automa
 *AI categorizes messages into sales/support/billing/other*
 
 #### **Business Impact:**
-- 📈 **Hot lead response time** < 2 minutes
-- 🎯 **88% scoring accuracy**
-- 💰 **Conversion rate increased by 40%**
+- 📈 Enables fast response handling for high-priority leads
+-🎯 AI-based lead scoring for better qualification
+-💰 Designed to improve conversion through automated routing
 
 [→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/AI-Powered%20Lead%20Management%20System)
 
