@@ -371,6 +371,3 @@ For questions or custom development:
 ⭐ **Thank you for reviewing this documentation!**
 ```
 
-✅ **Business impact** - Menunjukkan nilai nyata
-
-Sekarang tinggal ganti nama file screenshot sesuai dengan yang kamu upload! Ada yang perlu ditambahkan?
