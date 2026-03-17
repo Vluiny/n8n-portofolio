@@ -418,53 +418,395 @@ Create the following channels:
 
 ## 🎯 Key Features Summary
 
-✅ **Multi-channel capture** - Gmail, Telegram, Tally Forms
-✅ **AI-powered scoring** - 1-100 based on quality signals
-✅ **Smart routing** - Hot/Warm leads to different Slack channels
-✅ **Message classification** - Sales/Support/Billing/Other
-✅ **Google Sheets backup** - Automatic data archival
-✅ **Lead enrichment** - Industry, intent, budget insights
-✅ **Auto-reply** - Immediate acknowledgment
-✅ **Follow-up sequences** - Every 3 days until conversion
-✅ **Two-way sync** - With Google Sheets
-✅ **Error handling** - Dedicated Slack channel for issues
-✅ **Complete audit trail** - All activities logged
+# 🔄 Complete Flow Summary
+
+```
+[MULTI-CHANNEL INGESTION — Real-time]
+         ↓
+┌─────────────────────────────────────┐
+│    Tally Forms    │   Telegram    │    Gmail     │
+│  • Web Form       │  • DM/Chat    │  • Email     │
+│  • Name/Email/    │  • Name/      │  • From/     │
+│    Message        │    Message    │    Subject/  │
+│                   │    Chat ID    │    Body      │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│         MERGE & UNIFY DATA          │
+│    Single structure for all leads   │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│         AI LEAD SCORING             │
+│  ┌───────────────────────────────┐  │
+│  │ Evaluation Criteria:          │  │
+│  │ • Email domain: Corporate ↑   │  │
+│  │   Free email ↓                │  │
+│  │ • Name: Realistic ↑           │  │
+│  │   Suspicious ↓                │  │
+│  │ • Message: Clear intent ↑     │  │
+│  │   Vague ↓                     │  │
+│  │ • Source: Referral/Form ↑     │  │
+│  │   Unknown ↓                   │  │
+│  └───────────────────────────────┘  │
+│         ↓                           │
+│    Score 1-100 + Note               │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│         SMART SLACK ROUTING          │
+│         ┌───────────────┐           │
+│   ┌─────│  Score ≥80    │─────┐     │
+│   │     └───────────────┘     │     │
+│   ▼                           ▼     │
+│ #hot-lead                  #warm-lead│
+│ Immediate                  Prompt   │
+│ attention                  follow-up│
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       MESSAGE CLASSIFICATION         │
+│  ┌───────────────────────────────┐  │
+│  │  AI categorizes intent:       │  │
+│  │  • Sales   → #sales           │  │
+│  │  • Support → #support         │  │
+│  │  • Billing → #billing         │  │
+│  │  • Other   → No notification  │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       GOOGLE SHEETS BACKUP          │
+│  ┌───────────────────────────────┐  │
+│  │  Fields stored:               │  │
+│  │  • Name, Email, Message       │  │
+│  │  • Score, Created At, Status  │  │
+│  └───────────────────────────────┘  │
+│         ↓                           │
+│    Mark as synced_sheet = true      │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       AUTO-REPLY & CHANNEL          │
+│         DETECTION                   │
+│         ┌───────────────┐           │
+│   ┌─────│ Contains @ &  │─────┐     │
+│   │     │    .com?      │     │     │
+│   │     └───────────────┘     │     │
+│   ▼                           ▼     │
+│ ┌─────────────┐           ┌─────────────┐
+│ │   Email     │           │  Telegram   │
+│ │ Auto-Reply  │           │ Auto-Reply  │
+│ └─────────────┘           └─────────────┘
+│         ↓                           ↓
+│    Thank you message        Thank you message
+│    via Gmail                via Telegram
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       STATUS UPDATE                 │
+│  • auto_email_sent = true           │
+│  • status = contacted               │
+│  • last_contacted_at = now          │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       LEAD ENRICHMENT               │
+│  ┌───────────────────────────────┐  │
+│  │  AI infers:                   │  │
+│  │  • Industry                   │  │
+│  │  • Intent Level (low/med/high)│  │
+│  │  • Budget Level (low/med/high)│  │
+│  │  • Lead Type (B2B/B2C)        │  │
+│  └───────────────────────────────┘  │
+│         ↓                           │
+│    Update lead with enriched data   │
+│    Mark as enriched = true          │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       ACTIVITY LOGGING              │
+│  ┌───────────────────────────────┐  │
+│  │  sales_activity table:        │  │
+│  │  • lead_created               │  │
+│  │  • lead_rank                  │  │
+│  │  • lead_classification        │  │
+│  │  • temporary_database         │  │
+│  │  • email_sent                 │  │
+│  │  • lead_analysis              │  │
+│  │  • google_sheet_sync          │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│   [SCHEDULED — EVERY 3 DAYS]        │
+│         FOLLW-UP SEQUENCES           │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    GET CONTACTED LEADS              │
+│    (status = contacted)              │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    CALCULATE FOLLOW-UP NEED         │
+│  ┌───────────────────────────────┐  │
+│  │  days_since = now -           │  │
+│  │  last_contacted_at            │  │
+│  │  needs_followup = days ≥ 3    │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│         FOLLOW-UP FILTER            │
+│         ┌───────────────┐           │
+│   ┌─────│ needs_followup│─────┐     │
+│   │     │    = true?    │     │     │
+│   │     └───────────────┘     │     │
+│   ▼                           ▼     │
+│ Continue                    Discard │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       CHANNEL DETECTION              │
+│         ┌───────────────┐           │
+│   ┌─────│   Source?     │─────┐     │
+│   │     └───────────────┘     │     │
+│   ▼                           ▼     │
+│ ┌─────────────┐           ┌─────────────┐
+│ │   Email     │           │  Telegram   │
+│ │ Follow-up   │           │ Follow-up   │
+│ └─────────────┘           └─────────────┘
+│         ↓                           ↓
+│ "Just checking if          "Just checking if
+│  you're still              you're still
+│  interested..."            interested..."
+│  via Gmail                  via Telegram
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│       FOLLOW-UP TRACKING            │
+│  • followup_stage +1                │
+│  • last_contacted_at = now          │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│   [REAL-TIME SYNC]                  │
+│   TWO-WAY GOOGLE SHEETS SYNC        │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    GOOGLE SHEETS TRIGGER            │
+│    (Monitors for new rows)          │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    EXTRACT DATA                     │
+│    (Email, Status from new row)     │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    DATABASE UPDATE                  │
+│    Find lead by email → update      │
+│    status                           │
+└─────────────────────────────────────┘
+         ↓
+┌─────────────────────────────────────┐
+│    ACTIVITY LOGGING                 │
+│    Record "google_sheet_sync"       │
+└─────────────────────────────────────┘
+```
+
+## 📊 Flow Breakdown by Phase
+
+| Phase | Group | Key Actions |
+|-------|-------|-------------|
+| **1** | Ingestion | Tally/Telegram/Gmail → Merge → Unify |
+| **2** | Scoring | AI Evaluation → Score 1-100 |
+| **3** | Routing | Score-based → #hot-lead / #warm-lead |
+| **4** | Classification | Intent Categorization → Slack channels |
+| **5** | Backup | Google Sheets Append → Sync Status |
+| **6** | Acknowledgment | Channel Detection → Email/Telegram Reply |
+| **7** | Enrichment | AI Analysis → Industry/Intent/Budget/Type |
+| **8** | Logging | All activities to sales_activity |
+| **9** | Follow-up | Every 3 days → Calculate → Send → Track |
+| **10** | Sync | Sheets → Database → Update → Log |
 
 ---
 
-## 📞 Contact
+## 🎯 Key Decision Points
 
-For questions or custom development:
-- **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
-- **Email**: fuadsparta619@gmail.com
+```
+                    ┌─────────────────────┐
+                    │    Email contains   │
+                    │     "@" and ".com"? │
+                    └─────────────────────┘
+                           ↓
+                ┌──────────┴──────────┐
+         ┌──────▼──────┐        ┌──────▼──────┐
+         │     YES     │        │     NO      │
+         │  Email path │        │Telegram path│
+         └─────────────┘        └─────────────┘
+
+                    ┌─────────────────────┐
+                    │      Score Range    │
+                    └─────────────────────┘
+                           ↓
+         ┌──────────────┬──┴──┬──────────────┐
+    ┌────▼────┐   ┌─────▼─────┐   ┌────▼────┐
+    │  ≥80    │   │   60-79   │   │   <60   │
+    │#hot-lead│   │ #warm-lead│   │   No    │
+    │Immediate│   │  Prompt   │   │Routing  │
+    └─────────┘   └───────────┘   └─────────┘
+
+                    ┌─────────────────────┐
+                    │  Message Category   │
+                    └─────────────────────┘
+                           ↓
+         ┌──────────────┬──┴──┬──────────────┐
+    ┌────▼────┐   ┌─────▼─────┐   ┌────▼────┐
+    │ Sales   │   │  Support  │   │ Billing │
+    │ #sales  │   │ #support  │   │#billing │
+    └─────────┘   └───────────┘   └─────────┘
+
+                    ┌─────────────────────┐
+                    │  Follow-up Needed?  │
+                    │   days_since ≥ 3    │
+                    └─────────────────────┘
+                           ↓
+                ┌──────────┴──────────┐
+         ┌──────▼──────┐        ┌──────▼──────┐
+         │     YES     │        │     NO      │
+         │  Send next  │        │   Wait 3    │
+         │  follow-up  │        │ more days   │
+         └─────────────┘        └─────────────┘
+```
 
 ---
 
-## 🔄 Complete Flow Summary
+## ⏱️ Follow-up Timeline
 
 ```
-[Multi-Channel Ingestion Group]
-    ↓ Gmail/Telegram/Tally
-[AI Lead Scoring Group]
-    ↓ Score 1-100
-[Smart Slack Routing Group]
-    ↓ Hot (≥80) → #hot-lead
-    ↓ Warm (60-79) → #warm-lead
-[Message Classification Group]
-    ↓ Sales/Support/Billing/Other → respective channels
-[Google Sheets Backup Group]
-    ↓ Append to master spreadsheet
-[Lead Enrichment Group]
-    ↓ Industry, Intent, Budget, Type analysis
-[Auto-Reply Group]
-    ↓ Email or Telegram acknowledgment
-[Activity Logging]
-    ↓ Every action recorded in sales_activity
-[Follow-up Group (Every 3 days)]
-    ↓ Unconverted leads → follow-up messages
-[Two-Way Sheets Sync]
-    ↓ Manual updates synced back to database
+Day 0: Lead Captured
+    ↓
+┌─────────────────────────────────────┐
+│  Auto-Reply Sent Immediately        │
+│  Status: "contacted"                │
+└─────────────────────────────────────┘
+    ↓
+Day 3: First Follow-up
+    ↓
+┌─────────────────────────────────────┐
+│  "Just checking if you're still     │
+│   interested..."                    │
+│  followup_stage = 1                 │
+└─────────────────────────────────────┘
+    ↓
+Day 6: Second Follow-up (if no reply)
+    ↓
+┌─────────────────────────────────────┐
+│  Second follow-up message           │
+│  followup_stage = 2                 │
+└─────────────────────────────────────┘
+    ↓
+Day 9: Third Follow-up (if no reply)
+    ↓
+┌─────────────────────────────────────┐
+│  Third follow-up message            │
+│  followup_stage = 3                 │
+└─────────────────────────────────────┘
+    ↓
+Continues every 3 days until conversion
 ```
+
+---
+
+## 🔄 Data Flow Relationships
+
+```
+tally_trigger    telegram_trigger    gmail_trigger
+      ↓                   ↓                 ↓
+      └─────────┬─────────┴─────────┬───────┘
+                ↓
+            [MERGE]
+                ↓
+            leads table
+    ┌───────────────────────┐
+    │ • id                  │
+    │ • name                │
+    │ • email               │
+    │ • source              │
+    │ • message             │
+    │ • score               │
+    │ • status              │
+    │ • threadid_id         │
+    │ • notified_sales      │
+    │ • notified_sales_at   │
+    │ • message_routed      │
+    │ • synced_sheet        │
+    │ • auto_email_sent     │
+    │ • enriched            │
+    │ • industry            │
+    │ • intent_level        │
+    │ • budget_level        │
+    │ • lead_type           │
+    │ • followup_stage      │
+    │ • last_contacted_at   │
+    │ • created_at          │
+    └───────────────────────┘
+            ↑       ↑
+            │       │
+    ┌───────┘       └───────┐
+    ↓                       ↓
+sales_activity        Google Sheets
+    ↓                       ↓
+• lead_created        • name
+• lead_rank           • email
+• lead_classification • message
+• temporary_database  • score
+• email_sent          • created_at
+• lead_analysis       • status
+• google_sheet_sync
+```
+
+---
+
+## 📈 Metrics Tracked
+
+| Metric | Source | Purpose |
+|--------|--------|---------|
+| `score` | AI Lead Scoring | Lead quality (1-100) |
+| `notified_sales` | Database | Hot/Warm notification status |
+| `message_routed` | Database | Classification routing status |
+| `synced_sheet` | Database | Google Sheets backup status |
+| `auto_email_sent` | Database | Auto-reply status |
+| `enriched` | Database | Lead enrichment status |
+| `industry` | AI Enrichment | Lead's business sector |
+| `intent_level` | AI Enrichment | Interest seriousness |
+| `budget_level` | AI Enrichment | Estimated budget |
+| `lead_type` | AI Enrichment | B2B vs B2C |
+| `followup_stage` | Database | Number of follow-ups sent |
+| `days_since_contact` | Calculation | Time since last contact |
+| `response_time` | Calculation | Lead response speed |
+
+---
+
+## ✅ Complete Flow Summary
+
+| Step | Component | Function |
+|------|-----------|----------|
+| **1** | Multi-Channel Triggers | Capture leads from Tally, Telegram, Gmail |
+| **2** | Merge | Unify data structure |
+| **3** | AI Lead Scoring | Score 1-100 based on quality signals |
+| **4** | Slack Routing | Route hot (≥80) and warm (60-79) leads |
+| **5** | Message Classification | Categorize intent → route to sales/support/billing |
+| **6** | Google Sheets Backup | Archive all leads automatically |
+| **7** | Auto-Reply | Immediate acknowledgment via email/telegram |
+| **8** | Status Update | Mark as contacted |
+| **9** | Lead Enrichment | Add industry, intent, budget, type insights |
+| **10** | Activity Logging | Record all actions |
+| **11** | Follow-up (Every 3 days) | Re-engage unconverted leads |
+| **12** | Two-Way Sheets Sync | Sync manual updates back to database |
 
 ---
 
