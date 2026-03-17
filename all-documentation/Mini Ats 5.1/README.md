@@ -177,7 +177,7 @@ Based on production usage:
 Every 3 days, the system automatically re-evaluates all candidates and selects the top 3 for each job position.
 
 ### Schedule Trigger
-![Schedule Trigger](../assets/screenshots/ats-schedule-trigger.png)
+![Schedule Trigger](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20121818.png)
 *Workflow runs every 3 days at 08:00 AM*
 
 Configuration:
@@ -197,7 +197,7 @@ Configuration:
 ---
 
 ### Data Ingestion & Filtering
-![Data Ingestion & Filtering](URL_GAMBAR_DI_SINI)
+![Data Ingestion & Filtering](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20121856.png)
 *The initial phase involving job position retrieval and potential candidate screening.*
 
 **Core Processes:**
@@ -208,7 +208,7 @@ Configuration:
 ---
 
 ### AI Strategic Decision Engine
-![AI Strategic Decision Engine](URL_GAMBAR_DI_SINI)
+![AI Strategic Decision Engine](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20121948.png`)
 *The core system utilizing LLMs to automatically determine strategic candidate rankings.*
 
 **Core Processes:**
@@ -219,7 +219,7 @@ Configuration:
 ---
 
 ### Database Synchronization
-![Database Synchronization](URL_GAMBAR_DI_SINI)
+![Database Synchronization](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20122122.png)
 *Handles legacy data cleanup and synchronizes the latest ranking results with the system.*
 
 **Core Processes:**
@@ -230,7 +230,7 @@ Configuration:
 ---
 
 ### Analytics, Stability & Logging
-![Analytics, Stability & Logging](URL_GAMBAR_DI_SINI)
+![Analytics, Stability & Logging](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20122058.png)
 *The final stage for monitoring ranking stability and determining recruitment urgency.*
 
 **Core Processes:**
