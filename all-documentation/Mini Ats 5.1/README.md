@@ -1,5 +1,7 @@
 # 📄 AI-Powered ATS System (Mini ATS 5.1) - Complete Documentation
 
+This project is a simulation of a production-ready ATS system, built to demonstrate real-world automation architecture and AI-assisted candidate evaluation.
+
 ## 📋 Table of Contents
 1. System Architecture
 2. Trigger & Form Integration
@@ -157,16 +159,16 @@ All candidate data and AI scores are stored in Supabase.
 
 ---
 
-## 📊 Business Impact
+## 📊 Potential Business Impact (Simulation-Based)
 
-Based on production usage:
+This system is designed to potentially:
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Screening time per CV | 2 hours | 2.5 minutes | **98% faster** |
-| Candidates processed weekly | 20 | 200+ | **10x more** |
-| Interview conversion | Baseline | +35% | **Significant increase** |
-| Screening consistency | Subjective | Objective | **Bias reduced** |
+| Metric | Expected Impact |
+|--------|----------------|
+| Screening time per CV | Reduced significantly through automation |
+| Candidate processing capacity | Increased due to automated workflows |
+| Screening consistency | More standardized using AI scoring |
+| Decision support | Structured candidate comparison |
 
 ---
 
@@ -209,7 +211,7 @@ Configuration:
 
 ### AI Strategic Decision Engine
 ![AI Strategic Decision Engine](https://github.com/Vluiny/n8n-portofolio/blob/917b0b509081c631bb6dab76353598e509bfa829/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20121948.png`)
-*The core system utilizing LLMs to automatically determine strategic candidate rankings.*
+*LLM analyzes candidates based on predefined criteria and prompts.*
 
 **Core Processes:**
 * **AI Strategic Ranking:** LLM analyzes candidates based on complex strategic criteria and job requirements.
