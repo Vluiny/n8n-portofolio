@@ -1,19 +1,16 @@
-
-```markdown
 # 🤖 AI-Powered Email Support Automation - Complete Documentation
 
-## 📋 Table of Contents
-1. [System Architecture](#system-architecture)
-2. [Trigger & Email Fetching](#trigger--email-fetching)
-3. [Filtering & Spam Detection](#filtering--spam-detection)
-4. [AI Classification](#ai-classification)
-5. [Priority Scoring Logic](#priority-scoring-logic)
-6. [Customer Database](#customer-database)
-7. [Support Cases Management](#support-cases-management)
-8. [AI Response Generation](#ai-response-generation)
-9. [SLA & Escalation](#sla--escalation)
-10. [Logging & Monitoring](#logging--monitoring)
-11. [Setup Guide](#setup-guide)
+1. System Architecture
+2. Trigger & Email Fetching
+3. Filtering & Spam Detection
+4. AI Classification
+5. Priority Scoring Logic
+6. Customer Database
+7. Support Cases Management
+8. AI Response Generation
+9. SLA & Escalation
+10. Logging & Monitoring
+11. Setup Guide
 
 ---
 
@@ -21,7 +18,7 @@
 
 Complete system flow from Gmail trigger to AI-powered response.
 
-![Full Workflow](../assets/screenshots/email-support-full.png)
+![Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/03cbd6e6bcfe7d0234534d44404143782c3511af/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20173427.png)
 
 **Main Flow:**
 1. **Gmail Trigger** monitors new emails every minute
@@ -38,7 +35,7 @@ Complete system flow from Gmail trigger to AI-powered response.
 
 Gmail Trigger polls for new emails every minute, then fetches complete message details.
 
-![Gmail Trigger](../assets/screenshots/email-support-gmail-trigger.png)
+![Gmail Trigger](https://github.com/Vluiny/n8n-portofolio/blob/97622761ce8291b7a7565c77da8216d402290452/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-17%20112547.png)
 
 **Configuration:**
 ```json
@@ -79,7 +76,7 @@ Suspicious emails are flagged using a Text Classifier:
 
 The core intelligence: AI analyzes email content and returns structured data.
 
-![AI Classification Node](https://github.com/Vluiny/n8n-portofolio/blob/3c9bdc832b656aa2096ba5f12fbedf23c61dde01/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-16%20173241.png)
+![AI Classification Node](https://github.com/Vluiny/n8n-portofolio/blob/97622761ce8291b7a7565c77da8216d402290452/all-documentation/ai-email-support/Screenshot/Screenshot%202026-03-17%20112647.png)
 
 **AI Output Example:**
 ```json
