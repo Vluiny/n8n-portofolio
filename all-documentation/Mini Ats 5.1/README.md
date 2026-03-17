@@ -63,7 +63,7 @@ The CV is downloaded from the Tally URL and text is extracted.
 
 The system fetches job requirements from Supabase based on the position selected.
 
-![Get Job Row](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224107.png)
+![Get Job Row](https://github.com/Vluiny/n8n-portofolio/blob/17777f05a054222ee93352bc99e9aacaa353e8b6/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20114853.png)
 
 **Job Data Retrieved:**
 - Required skills
@@ -71,17 +71,11 @@ The system fetches job requirements from Supabase based on the position selected
 - Preferred education
 - Additional criteria
 
-This data is merged with the extracted CV text:
-
-![Merge Node](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224218.png)
-
----
-
 ## 🤖 AI Information Extraction
 
 An AI agent extracts structured information from the raw CV text.
 
-![AI Extraction Agent](https://github.com/Vluiny/n8n-portofolio/blob/33ced338cb6025e316235c834c92dbba6f315354/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-16%20224153.png)
+![AI Extraction Agent](https://github.com/Vluiny/n8n-portofolio/blob/17777f05a054222ee93352bc99e9aacaa353e8b6/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20114923.png)
 
 **System Prompt:**
 ```
@@ -115,7 +109,7 @@ Return ONLY valid JSON:
 
 A second AI agent compares the candidate against job requirements and provides scores.
 
-![AI Scoring Agent](../assets/screenshots/ats-ai-scoring.png)
+![AI Scoring Agent](https://github.com/Vluiny/n8n-portofolio/blob/17777f05a054222ee93352bc99e9aacaa353e8b6/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20115002.png)
 
 **System Prompt:**
 ```
@@ -136,22 +130,13 @@ Return ONLY valid JSON:
   "justification": "Candidate has all required skills plus leadership experience..."
 }
 ```
-
-Another Code node parses and processes the scoring output:
-
-![Scoring Parser](../assets/screenshots/ats-scoring-parser.png)
-
-**Additional fields added:**
-- `is_qualified`: true if overall_score ≥ 70
-- `confidence_score`: normalized average of all scores
-
 ---
 
 ## 💾 Database Storage
 
 All candidate data and AI scores are stored in Supabase.
 
-![Insert Candidate](../assets/screenshots/ats-insert-candidate.png)
+![Insert Candidate](https://github.com/Vluiny/n8n-portofolio/blob/17777f05a054222ee93352bc99e9aacaa353e8b6/all-documentation/Mini%20Ats%205.1/Screenshot/Screenshot%202026-03-17%20115027.png)
 
 **Table: candidates**
 | Field | Description |
