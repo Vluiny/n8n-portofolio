@@ -44,7 +44,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 - 🎯 **94% classification accuracy**
 - 💰 **Support team workload reduced by 70%**
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/047357437f3a27484431bcabfe0a30ad47f2020b/all-documentation/ai-email-support)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/ai-email-support)
 
 ---
 
@@ -82,7 +82,7 @@ An automated recruitment system that processes job applications, extracts data f
 - 📊 **200+ candidates** processed weekly
 - 🎯 **Interview conversion increased by 35%**
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/3aea31c0132ddfcc832abeaa82de541f409cf912/all-documentation/Mini%20Ats%205.1)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/Mini%20Ats%205.1)
 
 ---
 
@@ -123,7 +123,7 @@ A multi-channel system that captures leads from various sources, performs automa
 - 🎯 **88% scoring accuracy**
 - 💰 **Conversion rate increased by 40%**
 
-[→ View Full Documentation](lead-ops/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/tree/0b335d1b7f6e46c429b1b5146f32e62c40491613/all-documentation/AI-Powered%20Lead%20Management%20System)
 
 ---
 
@@ -167,13 +167,13 @@ Interested in discussing your automation needs?
 ## 📸 **All Workflow Screenshots**
 
 ### AI Email Support System
-![Email Support](assets/screenshots/email-support-full.png)
+![Email Support](https://github.com/Vluiny/n8n-portofolio/blob/fb8578f5a71e2dbcaff252d97725711cae56066c/all-documentation/All%20Workflow%20Screenshot/Screenshot%202026-03-16%20173427.png)
 
 ### ATS System
-![ATS](assets/screenshots/ats-full.png)
+![ATS](https://github.com/Vluiny/n8n-portofolio/blob/fb8578f5a71e2dbcaff252d97725711cae56066c/all-documentation/All%20Workflow%20Screenshot/Screenshot%202026-03-16%20214935.png)
 
 ### OPS Lead Management
-![OPS](assets/screenshots/ops-full.png)
+![OPS](https://github.com/Vluiny/n8n-portofolio/blob/fb8578f5a71e2dbcaff252d97725711cae56066c/all-documentation/All%20Workflow%20Screenshot/Screenshot%202026-03-17%20131737.png)
 
 ---
 
