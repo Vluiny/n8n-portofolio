@@ -111,27 +111,6 @@ Return ONLY valid JSON:
 }
 ```
 
-A Code node validates and parses the AI output:
-
-![Validation Node](../assets/screenshots/ats-validation.png)
-
----
-
-## ✅ Data Validation
-
-An IF node ensures all required fields are present before proceeding.
-
-![Validation Check](../assets/screenshots/ats-if-check.png)
-
-**Required Fields:**
-- Name
-- Email
-- Skills
-
-If any field is missing, the application is flagged for manual review.
-
----
-
 ## 🎯 AI Candidate Scoring
 
 A second AI agent compares the candidate against job requirements and provides scores.
@@ -232,189 +211,47 @@ Configuration:
 
 ---
 
-### Fetch All Job Positions
-![Get Job Positions](../assets/screenshots/ats-get-jobs.png)
-*Retrieves all active job positions from the database*
+### Data Ingestion & Filtering
+![Data Ingestion & Filtering](URL_GAMBAR_DI_SINI)
+*The initial phase involving job position retrieval and potential candidate screening.*
+
+**Core Processes:**
+* **Fetch Jobs & Candidates:** Retrieves active job positions and applicant data from the database.
+* **Score Filter:** Filters candidates with a minimum overall score of 70.
+* **Sort & Limit:** Identifies and selects the Top 15 candidates for advanced strategic analysis.
 
 ---
 
-### Get Candidates Per Job
-![Get Candidates](../assets/screenshots/ats-get-candidates.png)
-*Fetches all candidates for each job position*
+### AI Strategic Decision Engine
+![AI Strategic Decision Engine](URL_GAMBAR_DI_SINI)
+*The core system utilizing LLMs to automatically determine strategic candidate rankings.*
+
+**Core Processes:**
+* **AI Strategic Ranking:** LLM analyzes candidates based on complex strategic criteria and job requirements.
+* **JSON Parsing:** Converts AI reasoning into structured, machine-readable data.
+* **Data Enrichment:** Re-fetches and maps complete profile details for the final Top 3 candidates.
 
 ---
 
-### Filter Qualified Candidates (Score ≥ 70)
-![Qualified Filter](../assets/screenshots/ats-qualified-filter.png)
-*Only candidates with overall_score ≥ 70 are processed further*
+### Database Synchronization
+![Database Synchronization](URL_GAMBAR_DI_SINI)
+*Handles legacy data cleanup and synchronizes the latest ranking results with the system.*
+
+**Core Processes:**
+* **Old Data Cleanup:** Removes ranking data from previous cycles to maintain data integrity.
+* **Insert New Top 3:** Records the newly selected elite candidates into the `top_candidate` table.
+* **Stats Update:** Updates real-time statistics in the `job_positions` table (e.g., candidate count & timestamp).
 
 ---
 
-### Sort & Limit Top 15
-![Sort Candidates](../assets/screenshots/ats-sort-candidates.png)
-*Candidates are sorted by overall_score (highest to lowest) and top 15 are selected*
+### Analytics, Stability & Logging
+![Analytics, Stability & Logging](URL_GAMBAR_DI_SINI)
+*The final stage for monitoring ranking stability and determining recruitment urgency.*
 
----
-
-### AI Strategic Ranking
-![AI Strategic Ranking](../assets/screenshots/ats-ai-ranking.png)
-
-**System Prompt:**
-```
-You are an AI HR Strategic Decision Engine.
-
-Return EXACTLY ONE valid JSON object:
-{
-  "top_3": [
-    {
-      "candidate_id": "string",
-      "job_id": "string",
-      "candidate_NAME": "string",
-      "rank": number,
-      "strategic_reason": "string",
-      "decision_score": number
-    }
-  ],
-  "ranking_summary": "string",
-  "strategic_summary": "string",
-  "hiring_recommendation": "Conservative | Balanced | Aggressive"
-}
-```
-
-**Rules:**
-- Only include top 3 candidates
-- Rank must be 1, 2, 3
-- decision_score must be numeric
-- Pure JSON output only
-
----
-
-### Parse Ranking Results
-![Ranking Parser](../assets/screenshots/ats-ranking-parser.png)
-*Processes the JSON output from AI and prepares it for database storage*
-
----
-
-### Split Out Top 3 Candidates
-![Split Out](../assets/screenshots/ats-split-out.png)
-*Splits the top_3 array into separate items for individual processing*
-
----
-
-### Get Complete Candidate Data
-![Get Candidate Data](../assets/screenshots/ats-get-candidate-data.png)
-*Retrieves complete candidate details from the database*
-
----
-
-### Clean Old Temporary Data
-![Delete Temp](../assets/screenshots/ats-delete-temp.png)
-*Removes temporary data from the previous ranking cycle*
-
----
-
-### Store in Temporary Table
-![Insert Temp](../assets/screenshots/ats-insert-temp.png)
-*Stores ranking results temporarily in the temp_top_candidate table*
-
----
-
-### Merge with Anchor
-![Merge Anchor](../assets/screenshots/ats-merge-anchor.png)
-*Merges with anchor data to ensure all items are processed correctly*
-
----
-
-### Get Existing Top Candidates
-![Get Existing Top](../assets/screenshots/ats-get-existing-top.png)
-*Retrieves existing top candidate data for comparison*
-
----
-
-### Check if Top 3 Exists
-![Check Top 3](../assets/screenshots/ats-check-top3.png)
-*Checks if there are already 3 selected candidates*
-
----
-
-### Delete Old Top Candidates
-![Delete Old Top](../assets/screenshots/ats-delete-old-top.png)
-*Deletes previous top candidate data from the main table*
-
----
-
-### Insert New Top Candidates
-![Insert New Top](../assets/screenshots/ats-insert-new-top.png)
-*Stores the new top 3 candidates in the top_candidate table*
-
----
-
-### Update Job Position Stats
-![Update Job Stats](../assets/screenshots/ats-update-job-stats.png)
-*Updates statistics in the job_positions table (candidate count, last ranked at)*
-
----
-
-### Log Ranking Activity
-![Ranking Log](../assets/screenshots/ats-ranking-log.png)
-*Records all ranking activities in the ranking_log table*
-
-Fields recorded:
-- `job_id`
-- `total_candidates`
-- `elite_candidates` (score ≥ 70)
-- `ranking_summary`
-- `strategic_summary`
-- `hiring_recommendation`
-- `ranking_stability`
-- `cycle_number`
-- `confidence`
-
----
-
-### Check Ranking Stability
-![Stability Check](../assets/screenshots/ats-stability-check.png)
-*Compares with the previous cycle to identify changes*
-
-**Stability Categories:**
-- **First Cycle** - Never ranked before
-- **Stable** - Top candidate remains the same as previous cycle
-- **Shifting** - Top candidate has changed
-
----
-
-### Calculate Hiring Urgency
-![Hiring Urgency](../assets/screenshots/ats-hiring-urgency.png)
-*Determines hiring urgency based on the number of elite candidates*
-
-| Elite Candidates | Urgency |
-|-----------------|---------|
-| ≤ 1 | High |
-| ≤ 3 | Medium |
-| > 3 | Low |
-
----
-
-### Get Previous Ranking Log
-![Previous Log](../assets/screenshots/ats-previous-log.png)
-*Retrieves previous ranking data for comparison*
-
----
-
-### Determine Confidence Level
-![Confidence Level](../assets/screenshots/ats-confidence.png)
-
-**Confidence Logic:**
-- **High** - Stable ranking, enough candidates
-- **Medium** - Shifting but enough candidates
-- **Low** - Insufficient elite candidates
-
----
-
-### Complete Ranking Log Entry
-![Complete Log](../assets/screenshots/ats-complete-log.png)
-*Saves all ranking data to the database*
-
+**Core Processes:**
+* **Stability Check:** Compares current results with previous cycles to identify ranking shifts.
+* **Urgency & Confidence:** Calculates hiring priority and the system's confidence level in the ranking.
+* **Final Logging:** Records all activities into the `ranking_log` for audit trails and performance tracking.
 ---
 
 ## 🎯 **Business Impact of Scheduled Ranking**
