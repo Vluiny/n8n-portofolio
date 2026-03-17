@@ -23,7 +23,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 | ✅ AI response generation | • Custom scoring algorithm |
 | ✅ SLA management & escalation | |
 
-#### 📸 **Workflow Overview**
+#### 📸 **Full Workflow Architecture**
 ![AI Email Support - Full Workflow](https://github.com/Vluiny/n8n-portofolio/blob/45294978e39f41f150a4173507a30fe7e2e25b7d/Screenshot/Screenshot%202026-03-16%20173427.png)
 *Complete system flow from trigger to response*
 
@@ -99,20 +99,23 @@ A multi-channel system that captures leads from various sources, performs automa
 | ✅ Lead enrichment & analysis | • Slack API |
 | ✅ Auto-followup sequences | • Supabase |
 
+#### 📸 **Full Workflow Architecture**
+![Workflow-Architecture](https://github.com/Vluiny/n8n-portofolio/blob/680d8be3c0f61873d833571b402244cc48e51b88/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20131737.png)
+
 #### 📸 **Multi-Channel Triggers**
-![Multi-Channel](assets/screenshots/ops-triggers.png)
+![Multi-Channel](https://github.com/Vluiny/n8n-portofolio/blob/680d8be3c0f61873d833571b402244cc48e51b88/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20131949.png)
 *Triggers from Gmail, Telegram, and Tally Forms unified in one system*
 
 #### 📸 **AI Lead Scoring**
-![Lead Scoring](assets/screenshots/ops-scoring.png)
+![Lead Scoring](https://github.com/Vluiny/n8n-portofolio/blob/680d8be3c0f61873d833571b402244cc48e51b88/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20132047.png)`
 *AI scores leads based on email domain, message quality, and source*
 
 #### 📸 **Slack Routing Logic**
-![Slack Routing](assets/screenshots/ops-routing.png)
+![Slack Routing](https://github.com/Vluiny/n8n-portofolio/blob/680d8be3c0f61873d833571b402244cc48e51b88/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20132119.png)
 *Leads routed to different channels based on score (Hot: ≥80, Warm: ≥60)*
 
 #### 📸 **Message Classification**
-![Message Classification](assets/screenshots/ops-classification.png)
+![Message Classification](https://github.com/Vluiny/n8n-portofolio/blob/680d8be3c0f61873d833571b402244cc48e51b88/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20132234.png)
 *AI categorizes messages into sales/support/billing/other*
 
 #### **Business Impact:**
