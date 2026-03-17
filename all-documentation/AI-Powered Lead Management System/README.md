@@ -39,7 +39,7 @@ A multi-channel system that captures leads from various sources, performs automa
 
 All scored leads are automatically backed up to Google Sheets for data archival and reporting.
 
-![Sheets Backup Group](../assets/screenshots/ops-sheets-backup-group.png)
+![Sheets Backup Group](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141010.png)
 *Complete flow: data preparation → append to sheet → update sync status*
 
 **What happens here:**
@@ -54,14 +54,52 @@ All scored leads are automatically backed up to Google Sheets for data archival 
 - Score
 - Created at
 - Status (default: "new")
-
+- 
 ---
 
-#### 📈 **Lead Enrichment & Analysis**
+#### ✉️ **Auto-Reply & Channel Detection**
+
+Leads receive immediate acknowledgment, with channel-specific routing based on email presence.
+
+![Auto-Reply Group](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141141.png)
+*Complete flow: channel detection → email/telegram reply → activity logging*
+
+**Process flow:**
+1. **Channel Detection** - Checks if email contains "@" and ".com"
+   - **If YES (Email)** → Send email acknowledgment
+   - **If NO (Telegram)** → Send Telegram acknowledgment
+
+2. **Email Auto-Reply**
+   ![Email Reply](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141512.png)
+   **Template:**
+   ```
+   Hi [name],
+   
+   Thanks for contacting our team. We received your message and will get back to you shortly.
+   
+   Best regards,
+   Sales Team
+   ```
+   2. **Telegram Auto-Reply**
+   ![EmTelegram Reply](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141516.png)
+   **Template:**
+   ```
+   Hi [name],
+   
+   Thanks for contacting our team. We received your message and will get back to you shortly.
+   
+   Best regards,
+   Sales Team
+   ```
+   4. **Activity Logging** - Records "email_sent" activity in `sales_activity` table
+5. **Status Update** - Marks lead as `auto_email_sent = true` and `status = contacted`
+
+
+   #### 📈 **Lead Enrichment & Analysis**
 
 Leads are enriched with additional business intelligence for better targeting and prioritization.
 
-![Enrichment Group](../assets/screenshots/ops-enrichment-group.png)
+![Enrichment Group](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141552.png)
 *Complete flow: fetch unenriched leads → AI analysis → update records*
 
 **Process flow:**
@@ -90,57 +128,13 @@ Return ONLY JSON:
 }
 ```
 
-4. **JSON Parser** - Processes AI output and structures the data
-5. **Database Update** - Saves enriched data and marks `enriched = true`
-
----
-
-#### ✉️ **Auto-Reply & Channel Detection**
-
-Leads receive immediate acknowledgment, with channel-specific routing based on email presence.
-
-![Auto-Reply Group](../assets/screenshots/ops-autoreply-group.png)
-*Complete flow: channel detection → email/telegram reply → activity logging*
-
-**Process flow:**
-1. **Channel Detection** - Checks if email contains "@" and ".com"
-   - **If YES (Email)** → Send email acknowledgment
-   - **If NO (Telegram)** → Send Telegram acknowledgment
-
-2. **Email Auto-Reply**
-   ![Email Reply](../assets/screenshots/ops-email-reply.png)
-   **Template:**
-   ```
-   Hi [name],
-   
-   Thanks for contacting our team. We received your message and will get back to you shortly.
-   
-   Best regards,
-   Sales Team
-   ```
-
-3. **Telegram Auto-Reply**
-   ![Telegram Reply](../assets/screenshots/ops-telegram-reply.png)
-   **Template:**
-   ```
-   Hi [name],
-   
-   Thanks for contacting our team. We received your message and will get back to you shortly.
-   
-   Best regards,
-   Sales Team
-   ```
-
-4. **Activity Logging** - Records "email_sent" activity in `sales_activity` table
-5. **Status Update** - Marks lead as `auto_email_sent = true` and `status = contacted`
-
 ---
 
 #### 🔄 **Two-Way Google Sheets Sync**
 
 Changes made in Google Sheets are synced back to the database for manual updates.
 
-![Sheets Sync Group](../assets/screenshots/ops-sheets-sync-group.png)
+![Sheets Sync Group](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141614.png)
 *Complete flow: sheets trigger → data extraction → database update → activity log*
 
 **Process flow:**
@@ -155,7 +149,7 @@ Changes made in Google Sheets are synced back to the database for manual updates
 
 Unconverted leads receive automated follow-ups every 3 days to maximize conversion.
 
-![Follow-up Group](../assets/screenshots/ops-followup-group.png)
+![Follow-up Group](https://github.com/Vluiny/n8n-portofolio/blob/3eb6c479004d1e2acfe3461a041e36905d49cfff/all-documentation/AI-Powered%20Lead%20Management%20System/Screenshot/Screenshot%202026-03-17%20141633.png)
 *Complete flow: fetch contacted leads → calculate follow-up need → send reminders*
 
 **Process flow:**
