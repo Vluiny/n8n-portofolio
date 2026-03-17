@@ -3,6 +3,22 @@
 
 Hello! I'm an ** Automation Enthusiast** who builds complex systems using [n8n](https://n8n.io/). This repository is a **visual portfolio** of production workflows I have developed.
 
+## 🚀 About This Portfolio
+
+This repository contains a collection of simulation-based, production-ready automation systems built using n8n, APIs, and AI models.
+
+The goal of these projects is to demonstrate real-world system design, workflow automation, and AI-assisted decision-making.
+
+⚠️ Note:
+This project is a simulation and has not yet been deployed in a real business environment.
+It is designed to demonstrate architecture and capabilities.
+
+## 💡 Potential Use Cases
+
+- Small business lead management automation
+- HR candidate pre-screening system
+- Customer support triaging system
+
 ---
 
 ## 📊 **Workflow Portfolio**
