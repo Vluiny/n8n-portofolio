@@ -1,6 +1,8 @@
 
 # ⚙️ OPS Lead Management System - Complete Documentation
 
+This project is a simulation of a production-ready lead management system, built to demonstrate multi-channel automation, AI-assisted lead scoring, and workflow orchestration.
+
 ## 📋 Table of Contents
 1. System Architecture
 2. Multi-Channel Lead Ingestion
@@ -314,18 +316,18 @@ Every action is logged in the `sales_activity` table for complete audit trail.
 
 ---
 
-## 📊 Complete Business Impact
+## 📊 Potential Business Impact (Design-Based)
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Lead response time | 24 hours | < 2 minutes | **98% faster** |
-| Lead scoring accuracy | Manual/subjective | AI-powered (88% accuracy) | **Significant** |
-| Lead enrichment | None | Industry, intent, budget insights | **Better targeting** |
-| Follow-up consistency | Inconsistent | Every 3 days guaranteed | **40% higher conversion** |
-| Multi-channel management | 3 separate tools | Single unified system | **Centralized view** |
-| Data backup | Manual | Automatic to Google Sheets | **100% reliable** |
-| Team notifications | Scattered | Centralized Slack channels | **Faster response** |
+This system is designed to:
 
+| Area | Expected Impact |
+|------|----------------|
+| Lead response time | Faster response through automation |
+| Lead scoring | More consistent evaluation using AI |
+| Lead enrichment | Additional context for better prioritization |
+| Follow-up consistency | Automated follow-up scheduling |
+| Multi-channel handling | Centralized lead management |
+| Data backup | Automated data storage |
 ---
 
 ## ⚙️ Setup Guide
