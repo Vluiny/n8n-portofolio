@@ -357,15 +357,201 @@ For questions or custom development:
 
 ---
 
-## 🎯 Key Features Summary
+# 🔄 Complete Flow Summary
 
-✅ **Fully automated** - No manual intervention needed
-✅ **AI-powered** - Uses Llama 3.3 70B for extraction and scoring
-✅ **Scalable** - Handles hundreds of applications
-✅ **Objective** - Consistent scoring eliminates bias
-✅ **Transparent** - Justification provided for every score
-✅ **Production-ready** - Used in real recruitment processes
+```
+[SCHEDULED RANKING TRIGGER — Every 3 Days]
+              ↓
+    ┌─────────────────┐
+    │  Get All Jobs   │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │ Get Candidates  │
+    │  Per Job Position│
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │   Filter:       │
+    │ Score ≥ 70 Only │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │ Sort & Select   │
+    │   Top 15        │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │   AI Strategic  │
+    │  Ranking Engine │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │  Parse JSON &   │
+    │  Get Candidate  │
+    │  Complete Data  │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │   Clean Old     │
+    │  Ranking Data   │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │ Insert New Top 3│
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │ Update Job Stats│
+    │(Count & Timestamp│
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │   Log Ranking   │
+    │    Activity     │
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │Check Stability &│
+    │   Calculate     │
+    │Urgency & Confidence
+    └─────────────────┘
+              ↓
+    ┌─────────────────┐
+    │ Save Complete   │
+    │  Ranking Log    │
+    └─────────────────┘
+              ↓
+         [END CYCLE]
+```
 
+## 📊 Flow Breakdown
+
+| Phase | Process | Description |
+|-------|---------|-------------|
+| **1** | Schedule Trigger | Every 3 days at 08:00 AM |
+| **2** | Data Collection | Fetch all jobs and their candidates |
+| **3** | Filtering | Only candidates with score ≥ 70 proceed |
+| **4** | Sorting | Top 15 candidates by overall_score |
+| **5** | AI Analysis | LLM determines strategic top 3 |
+| **6** | Data Enrichment | Fetch complete candidate profiles |
+| **7** | Cleanup | Remove previous ranking data |
+| **8** | Storage | Insert new top 3 candidates |
+| **9** | Statistics | Update job position metrics |
+| **10** | Logging | Record all activities |
+| **11** | Analysis | Check stability, urgency, confidence |
+| **12** | Final Save | Complete ranking log entry |
+
+---
+
+## 🎯 Key Decision Points
+
+```
+                    ┌─────────────────┐
+                    │  Score ≥ 70?    │
+                    └─────────────────┘
+                           ↓
+                ┌──────────┴──────────┐
+         ┌──────▼──────┐        ┌──────▼──────┐
+         │   PROCEED   │        │   DISCARD   │
+         │  to Top 15  │        │  from Elite │
+         └─────────────┘        └─────────────┘
+
+                    ┌─────────────────┐
+                    │  AI Strategic   │
+                    │    Ranking      │
+                    └─────────────────┘
+                           ↓
+                ┌──────────┴──────────┐
+         ┌──────▼──────┐        ┌──────▼──────┐
+         │   TOP 3     │        │   NOT IN    │
+         │  Selected   │        │    TOP 3    │
+         └─────────────┘        └─────────────┘
+
+                    ┌─────────────────┐
+                    │  Stability Check│
+                    └─────────────────┘
+                           ↓
+         ┌──────────────┬──┴──┬──────────────┐
+    ┌────▼────┐   ┌─────▼─────┐   ┌────▼────┐
+    │  First  │   │  Stable   │   │ Shifting │
+    │  Cycle  │   │           │   │         │
+    └─────────┘   └───────────┘   └─────────┘
+```
+
+---
+
+## ⏱️ Timeline Visualization
+
+```
+Day 0: Application Submitted
+    ↓ (Real-time)
+┌─────────────────────────────────────┐
+│  AI Extraction → Scoring → Storage  │
+└─────────────────────────────────────┘
+    ↓
+Day 3: First Ranking Cycle
+    ↓
+┌─────────────────────────────────────┐
+│  Top 15 Selection → AI Ranking      │
+│  → Top 3 → Database → Logging       │
+└─────────────────────────────────────┘
+    ↓
+Day 6: Second Ranking Cycle
+    ↓
+┌─────────────────────────────────────┐
+│  Compare with Previous → Stability  │
+│  Check → Update Rankings → Log      │
+└─────────────────────────────────────┘
+    ↓
+Day 9, 12, 15... (Continues Every 3 Days)
+```
+
+---
+
+## 🔄 Data Flow Relationships
+
+```
+job_positions
+      ↑
+      │ (1 job has many candidates)
+      │
+candidates ──→ temp_top_candidate (temporary storage during ranking)
+      ↑                    ↑
+      │                    │
+      └───┬────────────────┘
+          │ (top 3 candidates)
+    ┌─────▼─────┐
+    │top_candidate│
+    └───────────┘
+          ↓
+    ┌─────▼─────┐
+    │ranking_log│
+    └───────────┘
+```
+
+---
+
+## 📈 Metrics Tracked Per Cycle
+
+| Metric | Source | Purpose |
+|--------|--------|---------|
+| `total_candidates` | Database | Overall volume |
+| `elite_candidates` | Filter (≥70) | Quality pool size |
+| `top_3_ids` | AI Ranking | Selected candidates |
+| `ranking_summary` | AI Output | Strategic overview |
+| `stability_status` | Comparison | First/Stable/Shifting |
+| `hiring_urgency` | Calculation | High/Medium/Low |
+| `confidence_level` | Algorithm | High/Medium/Low |
+| `cycle_number` | Increment | Tracking history |
+
+---
+
+✅ **Complete Ranking Flow** - From trigger to final log
+✅ **Every 3 Days** - Regular, automated evaluation
+✅ **AI-Powered Decisions** - Strategic candidate selection
+✅ **Full Audit Trail** - All activities logged
+✅ **Stability Tracking** - Monitor ranking consistency
 ---
 
 ⭐ **Thank you for reviewing this documentation!**
