@@ -1,0 +1,713 @@
+{
+  "name": "ATS Lite Versions",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "job_positions",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -64
+      ],
+      "id": "f6f8e092-5b3c-4bb8-8288-0a8b9973ef1b",
+      "name": "Get Many Rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 3,
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -992,
+        -64
+      ],
+      "id": "a1ad5e4e-3ebd-4b71-bbe4-a2e741e90791",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "candidates",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "job_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -576,
+        -64
+      ],
+      "id": "103f2530-8489-4bfe-8640-b198db57ce6d",
+      "name": "Get Many Rows3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const candidates = items.map(item => item.json);\nconst current_count = candidates.length;\n\nreturn [{\n  json: {\n    job_id: candidates[0]?.job_id || null,\n    current_count: current_count,\n    candidates: candidates\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -64
+      ],
+      "id": "452f4a45-4e18-46d5-af1f-f4f9958f1eca",
+      "name": "Code in JavaScript9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.candidates }}",
+        "options": {
+          "systemMessage": "=You are an AI HR Strategic Decision Engine.\n\nYou MUST return EXACTLY ONE valid JSON object.\nNo explanation.\nNo markdown.\nNo additional text.\nNo multiple JSON objects.\nNo comments.\n\nThe response must be a single valid JSON object in this exact structure:\n\n{\n  \"top_3\": [\n    {\n      \"candidate_id\": \"string\",\n      \"job_id\": \"string\",\n      \"candidate_NAME\": \"string\",\n      \"rank\": number,\n      \"strategic_reason\": \"string\",\n      \"decision_score\": number\n    }\n  ],\n  \"ranking_summary\": \"string\",\n  \"strategic_summary\": \"string\",\n  \"hiring_recommendation\": \"Conservative | Balanced | Aggressive\"\n}\n\nRules:\n- Only include top 3 candidates.\n- Rank must be 1, 2, 3.\n- decision_score must be numeric.\n- hiring_recommendation must be exactly one of:\n  Conservative, Balanced, Aggressive\n- Output must be pure JSON.\n- Do not wrap in markdown.\n- Do not return multiple JSON objects.\n- Do not add explanations before or after JSON.\n\nIf you violate the format, the system will fail.\nReturn ONLY the JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -96,
+        -64
+      ],
+      "id": "5c74924f-0bfe-4244-9806-6cbf829a92d5",
+      "name": "AI Agent4"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        112
+      ],
+      "id": "39f51746-3b1a-4e46-be59-78157f51c500",
+      "name": "llama-3.3-70b-versatile4",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = JSON.parse($input.first().json.output);\n\nreturn parsed.top_3.map(item => ({\n  json: {\n    ...item,\n    ranking_summary: parsed.ranking_summary,\n    strategic_summary: parsed.strategic_summary,\n    hiring_recommendation: parsed.hiring_recommendation\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        -64
+      ],
+      "id": "d14f0dab-d03d-493c-b2f7-9f8670a282fa",
+      "name": "Code in JavaScript11"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "candidate_id",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        480,
+        -64
+      ],
+      "id": "1944c5fb-bff2-4dd9-bfad-f82186fa78ff",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "candidates",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $json.candidate_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        672,
+        -64
+      ],
+      "id": "db22ef4b-bed7-4b7b-aaff-508b532ebcb9",
+      "name": "Get a row4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "top_candidate",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "job_id",
+              "fieldValue": "={{ $json.job_id }}"
+            },
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "recommended_rank",
+              "fieldValue": "=RANK : {{ $json.rank }}"
+            },
+            {
+              "fieldId": "confidence_score",
+              "fieldValue": "={{ $('Split Out1').item.json.decision_score }}"
+            },
+            {
+              "fieldId": "processed_by",
+              "fieldValue": "MINI ATS 5.0 AI DECCISION"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "skills",
+              "fieldValue": "={{ $json.skills }}"
+            },
+            {
+              "fieldId": "experience",
+              "fieldValue": "={{ $json.experience }}"
+            },
+            {
+              "fieldId": "education",
+              "fieldValue": "={{ $json.education }}"
+            },
+            {
+              "fieldId": "previous_role",
+              "fieldValue": "={{ $json.previous_role }}"
+            },
+            {
+              "fieldId": "overall_score",
+              "fieldValue": "={{ $json.overall_score }}"
+            },
+            {
+              "fieldId": "skill_match_score",
+              "fieldValue": "={{ $json.skill_match_score }}"
+            },
+            {
+              "fieldId": "experience_match_score",
+              "fieldValue": "={{ $json.experience_match_score }}"
+            },
+            {
+              "fieldId": "justification",
+              "fieldValue": "={{ $json.justification }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -80
+      ],
+      "id": "1de397e5-f477-436c-a488-3ad680cb54c2",
+      "name": "Create a row4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "top_candidate",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "job_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.job_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -64
+      ],
+      "id": "d57c57f7-eca4-44ac-939a-857addf6dea7",
+      "name": "Delete a row3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formId": "YOUR_TALLY_FORM_ID"
+      },
+      "type": "n8n-nodes-tallyforms.tallyTrigger",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        -432
+      ],
+      "id": "a3ae47b2-0545-43e0-9fc1-b511e603c07a",
+      "name": "Tally Trigger1",
+      "webhookId": "YOUR_TALLY_WEBHOOK_ID",
+      "credentials": {
+        "tallyApi": {
+          "id": "YOUR_TALLY_CREDENTIAL_ID",
+          "name": "Tally Fuad"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "35f2bb1b-1447-4f09-96e6-14912977113e",
+              "name": "Name ",
+              "value": "={{ $json.question_241Y1g.value }}",
+              "type": "string"
+            },
+            {
+              "id": "ac2548c2-16b1-4655-a186-ce8755b4c5d5",
+              "name": "Email",
+              "value": "={{ $json.question_xd474E.value }}",
+              "type": "string"
+            },
+            {
+              "id": "9540ed10-320d-497c-8ccf-16bbf99c8689",
+              "name": "Job Selected",
+              "value": "={{ $json.question_MAvlgp.value }}",
+              "type": "string"
+            },
+            {
+              "id": "d587a0ab-9673-4ca0-b869-7194966c1528",
+              "name": "CV Url",
+              "value": "={{ $json.question_J2Xbg4.value }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        -432
+      ],
+      "id": "ef93dc4a-2ea7-433b-add6-ee58e10c7a0f",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json['CV Url'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -512,
+        -432
+      ],
+      "id": "498e47c2-db08-4f2f-9933-a26267acd1e6",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -208,
+        -432
+      ],
+      "id": "5d13acdc-9b18-40e0-8960-cf55576ec431",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        112,
+        -416
+      ],
+      "id": "862e4b1f-a4cc-4150-bba1-70a450ace164",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=You are an information extraction engine.\n\nExtract structured data from the provided resume text.\n\nRules:\n-Temperature 0\n- Return ONLY valid JSON.\n- Do NOT include explanations.\n- Do NOT include markdown.\n- Do NOT include extra fields.\n- If information is missing, return null.\n- years_experience must be a number.\n- skills must be a comma-separated string.\n- Return ONLY a valid JSON object.\n- DO NOT wrap the output in markdown code blocks (no ```json).\n- DO NOT provide any explanation, preamble, or notes outside the JSON.\n\n**OUTPUT\n\n{\n  \"name\": \"\",\n  \"email\": \"\",\n  \"skills\": \"\",\n  \"years_experience\": 0,\n  \"education\": \"\",\n  \"previous_role\": \"\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        448,
+        -416
+      ],
+      "id": "126b108b-7e9c-45a9-a931-2dad69396ca7",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -256
+      ],
+      "id": "f240813e-3d8f-4edd-87c7-dca747f0c95f",
+      "name": "llama-3.3-70b-versatile2",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "Groq Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil raw output dari OpenAI\nconst raw = $input.first().json.output;\n\n// Jika OpenAI mengembalikan string JSON\nlet parsed;\n\ntry {\n  parsed = typeof raw === \"string\" ? JSON.parse(raw) : raw;\n} catch (error) {\n  throw new Error(\"Invalid JSON from OpenAI\");\n}\n\n// Validasi field wajib\nconst requiredFields = [\n  \"name\",\n  \"email\",\n  \"skills\",\n  \"years_experience\",\n  \"education\",\n  \"previous_role\"\n];\n\nfor (const field of requiredFields) {\n  if (!(field in parsed)) {\n    throw new Error(`Missing field: ${field}`);\n  }\n}\n\n// Validasi tipe data\nif (parsed.years_experience !== null && typeof parsed.years_experience !== \"number\") {\n  throw new Error(\"years_experience must be a number\");\n}\n\n// Normalisasi nilai null jika kosong\nreturn [\n  {\n    json: {\n      name: parsed.name || null,\n      email: parsed.email || null,\n      skills: parsed.skills || null,\n      years_experience: parsed.years_experience ?? null,\n      education: parsed.education || null,\n      previous_role: parsed.previous_role || null\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -416
+      ],
+      "id": "7208266e-f2a4-4ed0-a15d-a7196c862611",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "tableId": "candidates",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $json.name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "skills",
+              "fieldValue": "={{ $json.skills }}"
+            },
+            {
+              "fieldId": "years_experience",
+              "fieldValue": "={{ $json.years_experience }}"
+            },
+            {
+              "fieldId": "education",
+              "fieldValue": "={{ $json.education }}"
+            },
+            {
+              "fieldId": "previous_role",
+              "fieldValue": "={{ $json.previous_role }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        992,
+        -416
+      ],
+      "id": "fa7c2760-043f-49d6-8ca1-75068e4bf96e",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get Many Rows": {
+      "main": [
+        [
+          {
+            "node": "Get Many Rows3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Many Rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Many Rows3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript9": {
+      "main": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent4": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llama-3.3-70b-versatile4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript11": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Get a row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row4": {
+      "main": [
+        [
+          {
+            "node": "Delete a row3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row4": {
+      "main": [
+        []
+      ]
+    },
+    "Delete a row3": {
+      "main": [
+        [
+          {
+            "node": "Create a row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tally Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llama-3.3-70b-versatile2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID",
+  "meta": {
+    "instanceId": "YOUR_INSTANCE_ID"
+  },
+  "id": "YOUR_WORKFLOW_ID",
+  "tags": []
+}
