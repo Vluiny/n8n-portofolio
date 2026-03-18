@@ -173,7 +173,7 @@ have been **removed or anonymized** to protect client privacy and system securit
 Interested in discussing your automation needs?
 
 - **LinkedIn**: https://linkedin.com/in/restu-pambudi-6b190a386
-- **Email**: fuadsparta619@gmail.com
+- **Email**: restupambudi2234@gmail.com
 
 ---
 
