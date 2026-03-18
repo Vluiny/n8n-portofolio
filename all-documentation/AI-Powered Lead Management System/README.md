@@ -3,6 +3,8 @@
 
 This project is a simulation of a production-ready lead management system, built to demonstrate multi-channel automation, AI-assisted lead scoring, and workflow orchestration.
 
+---
+
 ## 📋 Table of Contents
 1. System Architecture
 2. Multi-Channel Lead Ingestion
@@ -415,6 +417,14 @@ Create the following channels:
 - Email content processed in memory only
 - Error handling routes issues to dedicated Slack channel
 - Data anonymized in screenshots
+
+---
+
+## 📞 Contact
+
+For questions or custom development:
+- **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
+- **Email**: restupambudi2234@gmail.com
 
 ---
 
