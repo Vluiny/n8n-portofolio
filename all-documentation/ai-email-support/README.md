@@ -2,6 +2,8 @@
 
 This project is a simulation of a production-ready AI-powered email automation system, built to demonstrate workflow automation, AI-assisted email processing, and intelligent response handling across various use cases.
 
+---
+
 **Data Tabels**
 1. System Architecture
 2. Trigger & Email Fetching
@@ -274,7 +276,7 @@ CREATE TABLE support_cases (
 
 For questions or custom development:
 - **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
-- **Email**: fuadsparta619@gmail.com
+- **Email**: restupambudi2234@gmail.com
 
 # 🔄 Complete Flow Summary
 
