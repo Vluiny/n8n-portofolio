@@ -2,6 +2,8 @@
 
 This project is a simulation of a production-ready ATS system, built to demonstrate real-world automation architecture and AI-assisted candidate evaluation.
 
+---
+
 ## 📋 Table of Contents
 1. System Architecture
 2. Trigger & Form Integration
@@ -355,7 +357,7 @@ Create a form with:
 
 For questions or custom development:
 - **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
-- **Email**: fuadsparta619@gmail.com
+- **Email**: restupambudi2234@gmail.com
 
 ---
 
