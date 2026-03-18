@@ -57,7 +57,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 -🎯 High accuracy email classification using multi-model AI
 -💰 Reduces repetitive support workload through automation
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/4925800775368f0e27b6cded2030875ed9725fe9/all-documentation/ai-email-support/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/55116e6235bc10e74d810b49c2695bb8870780df/all-documentation/ai-email-support/README.md)
 
 ---
 
@@ -95,7 +95,7 @@ An automated recruitment system that processes job applications, extracts data f
 -📊 Designed to handle large volumes of candidates
 -🎯 Improves candidate filtering consistency using AI scoring
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/86f0cd04eafd07ee8d23cfb4ba53eae02876dc44/all-documentation/Mini%20Ats%205.1/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/4c70f937eaf7fd251ec2f7127c0b6113a240e8e6/all-documentation/Mini%20Ats%205.1/README.md)
 
 ---
 
@@ -136,7 +136,7 @@ A multi-channel system that captures leads from various sources, performs automa
 -🎯 AI-based lead scoring for better qualification
 -💰 Designed to improve conversion through automated routing
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/86f0cd04eafd07ee8d23cfb4ba53eae02876dc44/all-documentation/AI-Powered%20Lead%20Management%20System/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/472a396e74f77a34ff2100faa3bb40b12d28e21a/all-documentation/AI-Powered%20Lead%20Management%20System/README.md)
 
 ---
 
@@ -173,7 +173,7 @@ have been **removed or anonymized** to protect client privacy and system securit
 Interested in discussing your automation needs?
 
 - **LinkedIn**: https://linkedin.com/in/restu-pambudi-6b190a386
-- **Email**: restupambudi2234@gmail.com
+- **Email**: restupambudi.dev@gmail.com
 
 ---
 
