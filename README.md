@@ -57,7 +57,7 @@ An automated email support system that uses **multiple AI models** to classify, 
 -🎯 High accuracy email classification using multi-model AI
 -💰 Reduces repetitive support workload through automation
 
-[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/86f0cd04eafd07ee8d23cfb4ba53eae02876dc44/all-documentation/ai-email-support/README.md)
+[→ View Full Documentation](https://github.com/Vluiny/n8n-portofolio/blob/4925800775368f0e27b6cded2030875ed9725fe9/all-documentation/ai-email-support/README.md)
 
 ---
 
