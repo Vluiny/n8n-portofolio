@@ -424,7 +424,7 @@ Create the following channels:
 
 For questions or custom development:
 - **LinkedIn**: [linkedin.com/in/restu-pambudi-6b190a386](https://linkedin.com/in/restu-pambudi-6b190a386)
-- **Email**: restupambudi2234@gmail.com
+- **Email**: restupambudi.dev@gmail.com
 
 ---
 
