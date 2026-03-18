@@ -106,7 +106,7 @@ You can:
 ## 📞 Contact
 
 - LinkedIn: https://linkedin.com/in/restu-pambudi-6b190a386
-- Email : restupambudi2234@gmail.com
+- Email : restupambudi.dev@gmail.com
 
 ---
 
