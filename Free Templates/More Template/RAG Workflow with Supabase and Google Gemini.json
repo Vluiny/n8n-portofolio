@@ -1,0 +1,234 @@
+{
+  "name": "RAG Workflow with Supabase and Google Gemini",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -80,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "When chat message received",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": {
+          "__rl": true,
+          "value": "your_table_name_here",
+          "mode": "list",
+          "cachedResultName": "FAQ"
+        },
+        "prompt": "Tugas Anda:  Menerima query atau konteks dari trigger chat yang diberikan.  Melakukan pencarian vektor di Supabase berdasarkan kemiripan semantik.  Mengambil dokumen atautr potongan dokumen yang paling relevan dengan query.  Aturan:  Prioritaskan relevansi dibanding jumlah.  Ambil hanya dokumen yang benar-benar berkaitan dengan konteks.  Jangan mengubah, menafsirkan, atau merangkum isi dokumen.  Jangan menambahkan opini atau pengetahuan di luar dokumen.  Jika tidak ada hasil yang relevan, kembalikan hasil kosong.  Output:  Kembalikan dokumen hasil retrieve dalam format yang rapi dan terstruktur.  Jangan sertakan penjelasan tambahan atau metadata yang tidak diperlukan.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        128,
+        192
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "YOUR_CONDITION_ID_HERE",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 0.62,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "document.pageContent"
+            },
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        688,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=User Promp :  {{ $('When chat message received').item.json.chatInput }}\n\nVector Store Data : {{ $json.pageContent }}",
+        "options": {
+          "systemMessage": "System Prompt: Context-Aware Answer Agent\n\nAnda adalah AI agent yang menjawab pertanyaan pengguna dengan bantuan data mentah hasil retrieval dari vector store yang memiliki skor kemiripan tinggi dengan pertanyaan pengguna.\n\nPeran Anda:\n\nMenggunakan data dari vector store sebagai konteks utama.\n\nMenjawab pertanyaan pengguna secara jelas, masuk akal, dan relevan.\n\nMenyusun jawaban yang alami dan mudah dipahami, tidak kaku seperti laporan teknis.\n\nPrinsip Utama:\n\nGunakan logika dan penalaran untuk menghubungkan data dengan pertanyaan.\n\nFleksibel dalam gaya bahasa, tetapi tetap setia pada fakta yang tersedia.\n\nJangan mengarang informasi baru di luar konteks yang diberikan.\n\nJika data tidak cukup untuk menjawab secara pasti, nyatakan keterbatasannya dengan wajar.\n\nAturan Penting:\n\nJangan menghalusinasi detail, angka, atau klaim yang tidak ada di data.\n\nJangan menebak jika informasi tidak ditemukan dalam konteks.\n\nBoleh menyimpulkan atau menyederhanakan selama masih masuk akal dan didukung data.\n\nJika ada beberapa potongan data yang relevan, gabungkan secara logis.\n\nGaya Jawaban:\n\nNatural, komunikatif, dan tidak terlalu formal.\n\nFokus pada kebutuhan pengguna.\n\nHindari pengulangan data mentah secara mentah kecuali diperlukan.\n\nOutput:\n\nJawaban akhir yang siap dibaca pengguna.\n\nTanpa menyebutkan vector store, skor kemiripan, atau proses internal AI."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        880,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        880,
+        176
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID_HERE",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID_HERE"
+  },
+  "id": "YOUR_WORKFLOW_ID_HERE",
+  "tags": []
+}

@@ -1,0 +1,549 @@
+{
+  "name": "Gmail Auto Responder with AI Classification and Labeling",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "=Subject : {{ $json.headers.subject }}\n\nBody: {{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Customer Suport",
+              "description": "Email yang berisi permintaan bantuan teknis, pertanyaan umum mengenai cara penggunaan produk, atau kendala operasional rutin yang memerlukan penjelasan atau panduan dari tim terkait tanpa adanya indikasi kegagalan sistem yang fatal."
+            },
+            {
+              "category": "High Priority",
+              "description": "Email yang menunjukkan urgensi sangat tinggi, laporan kerusakan sistem kritis yang menghentikan aktivitas bisnis, masalah kegagalan transaksi finansial, atau keluhan pelanggan dengan emosi kuat yang memerlukan penanganan segera dalam hitungan menit/jam."
+            },
+            {
+              "category": "Promotion",
+              "description": "Email yang bersifat komersial dan persuasif yang bertujuan untuk pemasaran, menawarkan diskon, menginformasikan peluncuran produk baru, atau buletin (newsletter) yang biasanya dikirimkan secara massal untuk menarik minat beli pengguna."
+            },
+            {
+              "category": "Personal Email",
+              "description": "Email komunikasi santai dan non-formal antara individu yang berisi topik pribadi, undangan sosial, atau sapaan antar teman yang tidak memiliki hubungan langsung dengan urusan pekerjaan, tiket bantuan, maupun transaksi profesional perusahaan."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        -32
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        144,
+        256
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "YOUR_GMAIL_LABEL_ID_HERE"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        304
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Add label to message",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.html }}",
+        "options": {
+          "systemMessage": "Anda adalah asisten pribadi yang ramah dan hangat, bertugas membalas email pribadi (personal) dengan gaya bahasa yang santai namun tetap sopan. Tujuan utama Anda adalah memberikan balasan yang terasa tulus, relevan dengan isi email pengirim, dan menjaga hubungan baik. Gunakan nada bicara yang manusiawi (tidak kaku/robotik) dan hindari penggunaan istilah bisnis yang formal kecuali diperlukan. Jika pengirim mengajak bertemu atau meminta sesuatu, berikan tanggapan yang antusias namun arahkan mereka untuk menunggu konfirmasi jadwal akhir dari saya secara langsung. Selalu akhiri dengan salam penutup yang hangat sesuai dengan kedekatan hubungan dalam email tersebut dan tidak usah menambahkan salam nama"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        992,
+        304
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        304
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Reply to a message",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "YOUR_GMAIL_LABEL_ID_HERE"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        -16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Add label to message1",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.text }}",
+        "options": {
+          "systemMessage": "Anda adalah Spesialis Penanganan Krisis yang sangat empati dan profesional. Tugas utama Anda adalah membalas email mendesak (urgent) dengan tujuan utama menenangkan klien dan memberikan kepastian bahwa masalah mereka sedang ditangani dengan prioritas tertinggi.\n\nGunakan prinsip komunikasi berikut:\n1. Validasi Emosi: Akui kekhawatiran atau kesulitan yang dialami klien (misal: \"Saya mengerti betapa krusialnya masalah ini bagi operasional Anda\").\n2. Ketenangan & Kepastian: Gunakan nada bicara yang tenang, stabil, dan tidak ikut panik. Hindari bahasa yang terlalu teknis di awal; fokuslah pada solusi.\n3. Tindakan Segera: Informasikan bahwa tim teknis/terkait sudah diberitahu dan masalah ini berada di urutan teratas daftar kerja kami.\n4. Komitmen Waktu: Berikan janji untuk memberikan pembaruan (update) dalam waktu singkat (misal: \"Saya akan kembali menghubungi Anda dalam 30-60 menit ke depan\").\n\nJangan memberikan janji teknis yang belum pasti bisa ditepati, fokuslah pada proses penanganan yang sedang berjalan. Akhiri dengan salam yang menunjukkan dedikasi penuh dan tidak usah menambahkan salam nama"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        992,
+        -16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        -16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Reply to a message1",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "YOUR_GMAIL_LABEL_ID_HERE"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        -192
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Add label to message2",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.text }}",
+        "options": {
+          "systemMessage": "Anda adalah Agen Layanan Pelanggan yang solutif, cerdas, dan sangat sabar. Tugas utama Anda adalah memberikan jawaban yang akurat atas pertanyaan klien dan memberikan solusi langkah-demi-langkah terhadap masalah teknis atau administratif yang mereka hadapi.\n\nGunakan prinsip komunikasi berikut:\n1. Analisis Kebutuhan: Identifikasi inti masalah dari pesan klien sebelum memberikan jawaban. Jika informasi kurang jelas, tanyalah dengan sopan.\n2. Solusi Terstruktur: Berikan solusi dalam bentuk poin-poin atau langkah 1, 2, 3 agar mudah diikuti oleh klien.\n3. Nada Bicara: Gunakan bahasa yang profesional, membantu, dan edukatif. Hindari kata-kata yang menyalahkan pengguna.\n4. Resourceful: Arahkan klien ke dokumentasi, pusat bantuan, atau video tutorial jika tersedia (gunakan placeholder jika link belum ada).\n5. Konfirmasi: Selalu tanyakan di akhir pesan apakah solusi tersebut sudah berhasil atau jika ada hal lain yang bisa dibantu.\n\nTujuan akhir Anda bukan hanya membalas, tetapi memastikan masalah klien benar-benar terselesaikan dalam interaksi sesedikit mungkin."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        992,
+        -192
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        -192
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Reply to a message2",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1536,
+        144
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Mark a message as read",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "YOUR_GMAIL_LABEL_ID_HERE"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        544,
+        144
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Add label to message3",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Procces\n",
+        "height": 784,
+        "width": 288,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Execution\n",
+        "height": 784,
+        "width": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Add Label",
+        "height": 768,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Email Trigger",
+        "height": 560,
+        "width": 592
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Add label to message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add label to message3": {
+      "main": [
+        [
+          {
+            "node": "Mark a message as read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID_HERE",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID_HERE"
+  },
+  "id": "YOUR_WORKFLOW_ID_HERE",
+  "tags": []
+}
