@@ -87,8 +87,6 @@ SPAM DETECTION (Gemini)
     Parse & Format Email
          ↓
     SEND AUTO-REPLY
-         ↓
-    UPDATE CASE STATUS
 ```
 
 ---
