@@ -17,14 +17,14 @@ This repository section is intended to:
 
 ---
 
-## 📂 Available Templates
+## 📂 Free Templates You Can Use
 
-### 📄 Mini ATS (Lite Version)
-A simplified Applicant Tracking System that:
-- Collects candidate data from forms
-- Extracts basic information
-- Stores data in a database
-- Applies simple qualification logic
+All templates below are **lite versions** of more complex systems. Feel free to use, modify, and learn from them.
+
+- **Mini ATS** — Simple recruitment system for managing candidates
+- **AI Lead Management** — Automated lead scoring and routing with AI
+- **AI Email Support** — Spam detection, intent classification, and auto-reply
+- *...and many more to come*
 
 ---
 
@@ -32,41 +32,40 @@ A simplified Applicant Tracking System that:
 
 Each template is:
 
-- ✅ **Simplified** (focused on core logic)
-- ✅ **Readable** (clean structure & node naming)
-- ✅ **Modular** (easy to extend)
-- ❌ Not a full production system
+- ✅ **Simple** — focused on core logic, no unnecessary complexity
+- ✅ **Readable** — clean structure and clear node naming
+- ✅ **Extendable** — easy to modify for your own needs
+- ❌ Not a production-ready system
 - ❌ No complex edge-case handling
 
 ---
 
-## 🛠️ Tech Stack
-
-Common tools used across templates:
+## 🛠️ Common Tech Stack
 
 - **n8n** — Workflow automation
 - **Supabase** — Database
 - **Gmail API** — Email integration
-- **Telegram Bot API** — Messaging
-- **Tally Forms API** — Form input
-- **Basic AI Models** — Data processing (when needed)
+- **Groq / Gemini** — AI processing
+- **Slack / Telegram** — Notifications
+- **Tally Forms** — Form input
 
 ---
 
 ## 📌 How to Use
 
-1. Import the `.json` workflow into n8n
-2. Connect your own credentials (API, database, etc.)
-3. Adjust fields based on your use case
-4. Extend the workflow as needed
+1. Download the `.json` file of the template you want
+2. Import into n8n (Workflows → Import from File)
+3. Connect your own credentials
+4. Adjust fields as needed
+5. Activate the workflow
 
 ---
 
-## ⚠️ Notes
+## ⚠️ Important Notes
 
-- These templates are **for learning and demonstration purposes**
-- They represent **core system structures**, not complete products
-- For advanced implementations, refer to the full workflows in the main portfolio
+- All templates use **placeholders** (`YOUR_CREDENTIAL`, `YOUR_EMAIL`, etc.) — **you must replace** them with your own data
+- These templates are for **learning and demonstration purposes only**
+- Not recommended for production without further customization
 
 ---
 
@@ -81,8 +80,8 @@ For more advanced and complete systems:
 ## 📞 Contact
 
 - LinkedIn: https://linkedin.com/in/restu-pambudi-6b190a386
-- Email : restupambudi.dev@gmail.com
+- Email: restupambudi.dev@gmail.com
 
 ---
 
-⭐ Feel free to use, modify, and learn from these templates.
+⭐ Feel free to use, modify, and learn from these templates. Happy automating!
