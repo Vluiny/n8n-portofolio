@@ -38,6 +38,9 @@ Each template is:
 - ✅ **Readable** (clean structure & node naming)
 - ✅ **Modular** (easy to extend)
 - ✅ **Multi-channel** (Email + Scheduled processing)
+- ❌ Not a full production system
+- ❌ No complex follow-up automation
+- ❌ No advanced lead enrichment
 
 ---
 
