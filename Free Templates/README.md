@@ -1,30 +1,31 @@
 # 🧩 n8n Free Templates
 
-A collection of **free, simplified n8n workflows** designed to demonstrate practical automation use cases.
+A collection of **free n8n workflows** designed to demonstrate practical automation use cases.
 
-These templates are created as **lightweight versions** of more advanced systems, making them easier to understand, modify, and reuse.
+This repository contains two types of templates:
+- **Lite Versions** — Simplified versions of bigger projects
+- **More Templates** — Random ready-to-use workflows for various needs
 
 ---
 
 ## 🚀 Purpose
 
-This repository section is intended to:
+This repository is intended to:
 
 - Share **ready-to-use workflow templates**
 - Help others learn **automation system design**
 - Provide a **starting point** for building real-world workflows
-- Showcase simplified versions of more complex systems
+- Showcase both simplified versions of complex systems and standalone useful automations
 
 ---
 
-## 📂 Free Templates You Can Use
+## 📂 What's Inside
 
-All templates below are **lite versions** of more complex systems. Feel free to use, modify, and learn from them.
+### 🧪 Lite Versions
+Simplified versions of bigger projects. Focused on core logic, easy to understand and extend.
 
-- **Mini ATS** — Simple recruitment system for managing candidates
-- **AI Lead Management** — Automated lead scoring and routing with AI
-- **AI Email Support** — Spam detection, intent classification, and auto-reply
-- *...and many more to come*
+### 🎲 More Templates
+Random ready-to-use workflows for various everyday automation needs.
 
 ---
 
@@ -48,16 +49,18 @@ Each template is:
 - **Groq / Gemini** — AI processing
 - **Slack / Telegram** — Notifications
 - **Tally Forms** — Form input
+- *And many more integrations*
 
 ---
 
 ## 📌 How to Use
 
-1. Download the `.json` file of the template you want
-2. Import into n8n (Workflows → Import from File)
-3. Connect your own credentials
-4. Adjust fields as needed
-5. Activate the workflow
+1. Browse the folders and choose a template
+2. Download the `.json` file
+3. Import into n8n (Workflows → Import from File)
+4. Review all nodes and replace placeholders with your own credentials
+5. Adjust fields as needed
+6. Activate the workflow
 
 ---
 
