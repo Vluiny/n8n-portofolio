@@ -1,0 +1,1016 @@
+{
+  "name": "AI-Powered Lead Management System",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "leads",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "score",
+              "condition": "eq",
+              "keyValue": "0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -5248,
+        -1136
+      ],
+      "id": "a2c54f2f-640b-4609-a8f5-4b74b15ef56d",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "YOUR_SUPABASE_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a sales lead scoring AI.\n\nAnalyze the lead and give a score from 1 to 100.\n\nLead info:\nName: {{$json.name}}\nEmail: {{$json.email}}\nSource: {{$json.source}}\n\nReturn only the number and note",
+        "options": {
+          "systemMessage": "=You are an AI that evaluates the quality of a sales lead.\n\nYour task is to assign a score from 1 to 100 based on the likelihood that the lead is a serious potential customer.\n\nUse these evaluation criteria:\n\nEmail domain:\n\n* Corporate domain (company.com) → higher score\n* Free email providers (gmail, yahoo, outlook) → lower score\n\nName:\n\n* Full realistic name → slightly higher score\n* Suspicious or incomplete name → lower score\n\nMessage quality:\n\n* Clear message with intent or interest → higher score\n* Short or vague message → lower score\n\nSource:\n\n* Referral or direct website form → higher score\n* Unknown or generic source → lower score\n\nScoring rules:\n\n* Return ONLY a number between 1 and 100.\n* Do NOT explain the score.\n* Do NOT return text.\n* Only return the number.\n* tambahkan note, karena ini untuk lead created, tambahkan note sesuai input, contoh : \"new lead from form\"\n* jika ada yang tidak memiliki email, berarti dia berasal dari telegram\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -5040,
+        -1136
+      ],
+      "id": "992bbc15-a6dc-4459-92b5-08f08cd86ee0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -5040,
+        -944
+      ],
+      "id": "4fa7723c-f756-4b59-9f27-4e4942a7c040",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "YOUR_GROQ_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf4ac1a1-7ba8-4afe-8c1f-ed2b8c98f59a",
+              "name": "Score",
+              "value": "={{ $json.count }}",
+              "type": "string"
+            },
+            {
+              "id": "b074be51-2b87-45e8-80fd-b28bac9a8009",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4464,
+        -1136
+      ],
+      "id": "eb9b3efa-2566-4df1-be28-bae82ca7760f",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "leads",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Get many rows').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "score",
+              "fieldValue": "={{ $json.Score }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "update"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -4208,
+        -1136
+      ],
+      "id": "c59bea11-4723-433d-8ba5-b68c3ccc2976",
+      "name": "Update a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "YOUR_SUPABASE_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "leads",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "update"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -5280,
+        -816
+      ],
+      "id": "1bc3506a-ee62-48cc-ae8c-a0dcb090edd6",
+      "name": "Get many rows3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "YOUR_SUPABASE_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7c8da04e-58b3-4b80-87e5-89b7aa384b2b",
+              "leftValue": "={{ $json.message_routed }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "686bdbc9-f0a7-4986-8b56-89853ef84b83",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4992,
+        -816
+      ],
+      "id": "b0391162-28ed-45a4-a45f-4ec4135769d5",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Classify the following customer message into one of these categories:\n\nsales\nsupport\nbilling\nother\n\nOnly return one word.\n\nCustomer message:\n{{ $json.message }}",
+        "options": {
+          "systemMessage": "=You are a lead classification assistant. Your only task is to analyze the incoming customer message and categorize it into exactly one of these categories:\n\n- sales\n- support\n- billing\n- other\n\nRules:\n1. Only output the category name in lowercase.\n2. Do not include punctuation, greetings, or any other text.\n3. If the message is about a product demo, pricing, or interest in services, classify as 'sales'.\n4. If the message is a technical issue, classify as 'support'.\n5. If the message is about payments or invoices, classify as 'billing'.\n6. If it doesn't fit the above, use 'other'."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -4656,
+        -832
+      ],
+      "id": "3ca5bbb0-ccdf-4d2c-a26a-66f5b60e5332",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -4656,
+        -672
+      ],
+      "id": "a7a0da64-8754-44f6-8dce-b23d1329848f",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_GROQ_CREDENTIAL_ID",
+          "name": "YOUR_GROQ_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "sales",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "546f3dc0-38a6-4186-85bf-47d69dc9f952"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "sales"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "b1612107-d563-45d2-9448-c5c5f61a9dff",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "support",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "support"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "5f80f96e-4d6c-4396-a218-aff933cbd426",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "billing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "billing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "1828572e-7aaa-497f-a4e0-997cea3559f5",
+                    "leftValue": "={{ $json.output }}",
+                    "rightValue": "other",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "other"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -4336,
+        -864
+      ],
+      "id": "554dac8b-ca2b-41af-8599-94179cff8818",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_SALES_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SALES_CHANNEL_NAME"
+        },
+        "text": "=New Customer Message\n\nName: {{ $('Get many rows3').item.json.name }}\nEmail: {{ $('Get many rows3').item.json.email }}\nMessage: {{ $('Get many rows3').item.json.message }}\n\nstatus : new",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -4064,
+        -880
+      ],
+      "id": "33745fa5-36e0-4590-8039-7018e1963d77",
+      "name": "Send a message3",
+      "webhookId": "",
+      "credentials": {
+        "slackApi": {
+          "id": "YOUR_SLACK_CREDENTIAL_ID",
+          "name": "YOUR_SLACK_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_SUPPORT_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_SUPPORT_CHANNEL_NAME"
+        },
+        "text": "=New Customer Message\n\nName: {{ $('Get many rows3').item.json.name }}\nEmail: {{ $('Get many rows3').item.json.email }}\nMessage: {{ $('Get many rows3').item.json.message }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -3840,
+        -848
+      ],
+      "id": "21591904-2bb6-440a-9f55-027f502b3660",
+      "name": "Send a message4",
+      "webhookId": "",
+      "credentials": {
+        "slackApi": {
+          "id": "YOUR_SLACK_CREDENTIAL_ID",
+          "name": "YOUR_SLACK_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_BILLING_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_BILLING_CHANNEL_NAME"
+        },
+        "text": "=New Customer Message\n\nName: {{ $('Get many rows3').item.json.name }}\nEmail: {{ $('Get many rows3').item.json.email }}\nMessage: {{ $('Get many rows3').item.json.message }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -3600,
+        -816
+      ],
+      "id": "49e9d3d6-d7e5-441e-8966-b5fb9815dd23",
+      "name": "Send a message5",
+      "webhookId": "",
+      "credentials": {
+        "slackApi": {
+          "id": "YOUR_SLACK_CREDENTIAL_ID",
+          "name": "YOUR_SLACK_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -5760,
+        -816
+      ],
+      "id": "e3c1b140-b0ca-436f-a96b-54cfea055b3a",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88ea60a9-af21-40d1-a001-9f3f1b4551d7",
+              "name": "Urutan",
+              "value": "Atas Ke Bawah",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5568,
+        -816
+      ],
+      "id": "a1d9f363-eb26-41fc-a772-dd9a51d06389",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mengambil semua item yang masuk\nconst items = $input.all();\n\n// Memproses setiap item dan mengembalikannya dalam bentuk array\nreturn items.map(item => {\n  const inputString = item.json.output;\n  const parts = inputString.split('\\n');\n  \n  return {\n    json: {\n      count: parseInt(parts[0]),\n      message: parts[1]\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4704,
+        -1136
+      ],
+      "id": "e479b815-d8a0-4326-9b2e-6dc0696f6e00",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "tableId": "leads",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "name",
+              "fieldValue": "={{ $('Merge').item.json.name }}{{ $('Merge').item.json.namee }}{{ $('Merge').item.json.Name }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Merge').item.json.gmail }}{{ $('Merge').item.json.gmaill }}{{ $('Merge').item.json.Email }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $('Merge').item.json.source }}{{ $('Merge').item.json.sourcee }}{{ $('Merge').item.json.Source }}"
+            },
+            {
+              "fieldId": "score",
+              "fieldValue": "0"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "new"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "message",
+              "fieldValue": "={{ $('Merge').item.json.message }}{{ $('Merge').item.json.messagee }}{{ $('Merge').item.json.Message }}"
+            },
+            {
+              "fieldId": "threadid_id",
+              "fieldValue": "={{ $('Merge').item.json.threadId }}{{ $('Merge').item.json.messageid }}{{ $('Merge').item.json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -4288,
+        -1424
+      ],
+      "id": "7635d231-4fb9-4857-bd66-5b18d63743d2",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_SUPABASE_CREDENTIAL_ID",
+          "name": "YOUR_SUPABASE_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "YOUR_SLACK_NOTIFICATION_CHANNEL_ID",
+          "mode": "list",
+          "cachedResultName": "YOUR_NOTIFICATION_CHANNEL_NAME"
+        },
+        "text": "=New lead received \n\nName/from: {{ $json.name }}{{ $json.namee }}{{ $json.Name }}\nEmail: {{ $json.gmail }}{{ $json.Email }}{{ $json.gmaill }}\nSource: {{ $json.source }}{{ $json.sourcee }}{{ $json.Source }}\nMessage : {{ $json.message }}{{ $json.messagee }}{{ $json.Message }}\nthreadvid/id : {{ $json.threadId }}{{ $json.messageid }}{{ $json.id }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        -4528,
+        -1424
+      ],
+      "id": "b1cbf81c-47c0-493b-a4df-78e9a3e1c3d4",
+      "name": "Send a message",
+      "webhookId": "",
+      "credentials": {
+        "slackApi": {
+          "id": "YOUR_SLACK_CREDENTIAL_ID",
+          "name": "YOUR_SLACK_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -5440,
+        -1408
+      ],
+      "id": "dbceae17-1f4c-44da-92b8-25ba30898181",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "YOUR_GMAIL_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $json.threadId }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -5232,
+        -1408
+      ],
+      "id": "c16caa5d-da34-45dd-8c1d-eca9fbd1129c",
+      "name": "Get a message",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_GMAIL_CREDENTIAL_ID",
+          "name": "YOUR_GMAIL_CREDENTIAL_NAME"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f65b1beb-3c29-4de2-b0fe-3bcd081cbe3d",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "2f47d75b-b7e0-4c2f-ae69-992022f76cf7",
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e0c1de78-2eb4-474b-bfa8-0ffa390c1b6f",
+              "leftValue": "={{ $json.threadId }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c1d340d7-173d-4a4e-92ff-2be9d729da90",
+              "leftValue": "={{ $json.source }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "dd688d31-e100-4b72-b4c6-7ddf7113818e",
+              "leftValue": "={{ $json.gmail }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -4832,
+        -1408
+      ],
+      "id": "15052458-1624-435c-a951-20ae07f31a8f",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d3562455-65f4-4eeb-8e07-0d4016d32a4e",
+              "name": "name",
+              "value": "={{ $json.from.value[0].address }}",
+              "type": "string"
+            },
+            {
+              "id": "6255de2e-b169-47b6-8226-55ae9f60b1e3",
+              "name": "message",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            },
+            {
+              "id": "fd41ad76-9645-4538-97ed-372b436e90b8",
+              "name": "threadId",
+              "value": "={{ $json.threadId }}",
+              "type": "string"
+            },
+            {
+              "id": "81581f31-8c8b-4842-a1d6-50e6faeaf547",
+              "name": "source",
+              "value": "gmail",
+              "type": "string"
+            },
+            {
+              "id": "f70d06f7-520b-44aa-957b-644c8e9790a8",
+              "name": "gmail",
+              "value": "={{ $json.from.value[0].address }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -5024,
+        -1408
+      ],
+      "id": "d2c3b033-904d-4edf-bd73-9a9eba5b3c08",
+      "name": "Edit Fields6"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        -592
+      ],
+      "id": "90bfe395-0144-40e6-a015-90d36dfffc11",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows3": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message4": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message5": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many rows3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "198e7656-529f-4e04-8bad-355814b70b2d",
+  "meta": {
+    "instanceId": "YOUR_N8N_INSTANCE_ID"
+  },
+  "id": "YOUR_WORKFLOW_ID",
+  "tags": []
+}
