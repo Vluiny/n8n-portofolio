@@ -583,7 +583,7 @@
         "json": {
           "id": "YOUR_MESSAGE_ID",
           "threadId": "YOUR_THREAD_ID",
-          "snippet": "Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara WhatsApp dan sistem CRM. Saya ingin mengetahui: Apakah",
+          "snippet": "hi",
           "payload": {
             "mimeType": "multipart/alternative"
           },
@@ -647,9 +647,9 @@
             "to": "To: YOUR_EMAIL",
             "content-type": "Content-Type: multipart/alternative; boundary=\"0000000000003b3d1f064b505ee0\""
           },
-          "html": "<div dir=\"ltr\">Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara WhatsApp dan sistem CRM.<br><br>Saya ingin mengetahui:<br><br>Apakah sistem Anda dapat mengelola pesan masuk secara otomatis?<br><br>Apakah tersedia fitur pencatatan histori percakapan pelanggan?<br><br>Apakah sistem dapat mengkategorikan pesan seperti hot lead, general inquiry, atau complaint?<br><br>Berapa estimasi waktu implementasi untuk bisnis skala kecil?<br><br>Mohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.<br><br>Terima kasih atas bantuannya.<br><br>Salam,<br>Rafi</div>\n",
-          "text": "Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi\nuntuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara\nWhatsApp dan sistem CRM.\n\nSaya ingin mengetahui:\n\nApakah sistem Anda dapat mengelola pesan masuk secara otomatis?\n\nApakah tersedia fitur pencatatan histori percakapan pelanggan?\n\nApakah sistem dapat mengkategorikan pesan seperti hot lead, general\ninquiry, atau complaint?\n\nBerapa estimasi waktu implementasi untuk bisnis skala kecil?\n\nMohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.\n\nTerima kasih atas bantuannya.\n\nSalam,\nRafi\n",
-          "textAsHtml": "<p>Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi<br/>untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara<br/>WhatsApp dan sistem CRM.</p><p>Saya ingin mengetahui:</p><p>Apakah sistem Anda dapat mengelola pesan masuk secara otomatis?</p><p>Apakah tersedia fitur pencatatan histori percakapan pelanggan?</p><p>Apakah sistem dapat mengkategorikan pesan seperti hot lead, general<br/>inquiry, atau complaint?</p><p>Berapa estimasi waktu implementasi untuk bisnis skala kecil?</p><p>Mohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.</p><p>Terima kasih atas bantuannya.</p><p>Salam,<br/>Rafi</p>",
+          "html": "hi",
+          "text": "hi",
+          "textAsHtml": "hi",
           "subject": "Test",
           "date": "2026-02-21T07:20:00.000Z",
           "to": {
