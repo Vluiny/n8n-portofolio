@@ -1,0 +1,910 @@
+{
+  "name": "AI Omni-Channel Customer Intelligence System",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=Bagus. Sekarang kita buat System Message sederhana tapi kuat untuk AI Agent yang akan melakukan klasifikasi level berikutnya (Intent + Urgency + Sentiment + Priority Signal).\n\nKarena primary_type (SPAM / LEGITIMATE / dll) sudah selesai, maka agent ini hanya menerima:\n\nEmail yang sudah dipastikan legitimate & layak diproses.\n\n🎯 Tujuan Agent Ini\n\nAgent hanya fokus pada:\n\nintent\n\nurgency\n\nsentiment\n\nbudget_detected\n\npriority_signal\n\nconfidence_score\n\nDan harus output JSON saja (tanpa teks tambahan).\n\n✅ SYSTEM MESSAGE (Sederhana & Production-Ready)\n\nKamu bisa gunakan ini sebagai System Prompt:\n\nSYSTEM MESSAGE:\n\nYou are an AI business email classification engine.\n\nYour task is to analyze legitimate business emails and classify them into structured decision data for automation routing.\n\nYou must:\n\nIdentify the primary intent of the sender.\n\nDetermine urgency level.\n\nDetect sentiment tone.\n\nDetect whether a budget is explicitly mentioned.\n\nSuggest a priority signal for routing.\n\nProvide a confidence score (0–100).\n\nReturn ONLY valid JSON.\nDo not include explanations outside JSON.\n\nIntent must be one of:\n\nHOT_LEAD\n\nGENERAL_INQUIRY\n\nSUPPORT_REQUEST\n\nCOMPLAINT\n\nEXISTING_CLIENT\n\nPARTNERSHIP_REQUEST\n\nUrgency must be one of:\n\nLOW\n\nMEDIUM\n\nHIGH\n\nSentiment must be one of:\n\nPOSITIVE\n\nNEUTRAL\n\nNEGATIVE\n\nVERY_NEGATIVE\n\nPriority signal must be one of:\n\nPRIORITY_1\n\nPRIORITY_2\n\nPRIORITY_3\n\nPRIORITY_4\n\nHUMAN_REVIEW\n\nConfidence score must be an integer from 0 to 100.\n\nIf the email is unclear, ambiguous, or lacks context, assign HUMAN_REVIEW and lower confidence score.\n\nOutput format:\n\n{\n\"intent\": \"\",\n\"urgency\": \"\",\n\"sentiment\": \"\",\n\"budget_detected\": true/false,\n\"priority_signal\": \"\",\n\"confidence_score\": 0\n}\n\nIf you output anything outside JSON, it will break the system."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        192
+      ],
+      "id": "a4681177-40bf-4ef0-bb84-22e9f2e06e18",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            },
+            {}
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -928,
+        192
+      ],
+      "id": "f989ba56-24a5-4d63-9809-8f9eb08c134e",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "=SUS",
+              "description": "Email mencurigakan (phishing/spam) biasanya memiliki pola seperti: pengirim memakai alamat yang mirip tapi bukan domain resmi (misal support-bank123@gmail.com ), subjek bernada mendesak atau menakut-nakuti (“AKUN ANDA AKAN DIBLOKIR”, “VERIFIKASI SEKARANG”), isi pesan meminta data sensitif (password, OTP, nomor kartu), menyertakan link yang domainnya aneh atau dipendekkan (bit.ly, tinyurl) dan tidak sesuai dengan brand aslinya, banyak kesalahan ejaan/grammar, salam yang sangat umum (“Dear User”), lampiran tidak jelas (file .zip/.html/.exe), serta mencoba memicu emosi cepat seperti takut, panik, atau hadiah besar. Biasanya kombinasi urgensi + permintaan data + link eksternal yang tidak wajar adalah pola paling kuat."
+            },
+            {
+              "category": "=NORMAL",
+              "description": "Email normal biasanya berasal dari domain resmi yang konsisten dengan identitas pengirim (misalnya @perusahaan.com), memiliki subjek yang jelas dan spesifik tanpa nada mendesak berlebihan, menggunakan salam yang relevan (menyebut nama penerima), isi pesan informatif dan kontekstual sesuai hubungan sebelumnya, tidak meminta data sensitif seperti password atau OTP melalui email, menyertakan tautan yang transparan dan mengarah ke domain resmi yang dapat diverifikasi, tata bahasa rapi dan profesional, serta tidak memaksa tindakan cepat dengan ancaman atau hadiah mencurigakan; secara umum pola email normal adalah identitas jelas + konteks wajar + tidak meminta informasi rahasia + nada profesional dan konsisten."
+            }
+          ]
+        },
+        "options": {
+          "fallback": "other"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -416,
+        176
+      ],
+      "id": "610a4b64-ab7d-407e-954d-218c94338f62",
+      "name": "Text Classifier",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Customer Email : {{ $('Edit Fields2').item.json['Body Email'] }}\nIntent : {{ $('Output Separator').item.json.intent }}\nUrgency : {{ $('Output Separator').item.json.urgency }}\nSentiment : {{ $('Output Separator').item.json.sentiment }}\n\nBuat respon yang profeisonal",
+        "options": {
+          "systemMessage": "=You are a professional customer support agent.\n\nYour job is to generate a clear, polite, and helpful email response to the customer.\n\nNama perusahaan : AutoFlow Dynamics\n\nRules:\n- Be professional and calm.\n- Be concise but complete.\n- Do not mention that you are an AI.\n- Do not invent information.\n- If information is missing, politely ask for clarification.\n- If the issue is unclear, ask specific follow-up questions.\n- If it is a complaint, show empathy.\n- If it is urgent, prioritize clarity and reassurance.\n- Do not overpromise.\n- Do not include placeholders like [Name] unless provided.\n- Format the response as a ready-to-send email.\n- \"Selalu gunakan sapaan yang sesuai dengan nada email pengirim. Jika pengirim santai, gunakan 'Halo [Nama]', jika formal gunakan 'Yth.' atau 'Dear'\n\n\nAdjust tone based on:\n- Intent\n- Urgency level\n- Sentiment\n\nIf urgency is high → respond with higher priority tone.\nIf sentiment is negative → increase empathy.\nIf intent is support → focus on solving the issue.\nIf intent is complaint → acknowledge frustration first.\n\n\njangan gunakan yth, dear, dll\n\nformatnya seperti email, ada subjek dan body\n\nberikan jawaban dan bukan membalikan pertanyaan yang sama ke klien\n\n\nTone:\nProfessional, confident, human, and solution-oriented."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -512,
+        672
+      ],
+      "id": "ff6b5230-2046-461d-8f1f-cf8317907967",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0d15a6cc-a0d9-43f7-be5d-e621efc4aac8",
+              "name": "subject",
+              "value": "={{ $json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "c62fa04a-953f-41ea-8c63-3de12b7412ca",
+              "name": "Body",
+              "value": "={{ $json.greeting }}\n\n{{ $json.opening }}\n\n{{ $json.message_content }}\n\n{{ $json.questions }}\n\n{{ $json.closing }}\n\n{{ $json.sign_off }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        672
+      ],
+      "id": "65f2961f-302b-4614-9818-c917d518965c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "sendTo": "YOUR_EMAIL",
+        "subject": "Perlu cek langsung",
+        "emailType": "text",
+        "message": "=From :  {{ $('Gmail Trigger').item.json.From }}\n\nTo : {{ $('Gmail Trigger').item.json.To }}\n\nSubject : {{ $('Gmail Trigger').item.json.Subject }}\n\nBody : {{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        320
+      ],
+      "id": "a56180fb-55ed-4c47-9c23-e6c3849c512f",
+      "name": "Manual Check",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        368
+      ],
+      "id": "37d7cbf7-4cf7-40fa-85d2-f6ed812ebe96",
+      "name": "Gemini 2.5 Fash",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Google Gemini(PaLM) Api account Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "support_cases",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "customer_id",
+              "fieldValue": "={{ $json.id }}"
+            },
+            {
+              "fieldId": "customer_email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "intent",
+              "fieldValue": "={{ $('Output Separator').item.json.intent }}"
+            },
+            {
+              "fieldId": "urgency",
+              "fieldValue": "={{ $('Output Separator').item.json.urgency }}"
+            },
+            {
+              "fieldId": "sentiment",
+              "fieldValue": "={{ $('Output Separator').item.json.sentiment }}"
+            },
+            {
+              "fieldId": "budget_detected",
+              "fieldValue": "={{ $('Output Separator').item.json.budget_detected }}"
+            },
+            {
+              "fieldId": "priority_signal",
+              "fieldValue": "={{ $('Output Separator').item.json.priority_signal }}"
+            },
+            {
+              "fieldId": "confidence_score",
+              "fieldValue": "={{ $('Output Separator').item.json.confidence_score }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "NEW"
+            },
+            {
+              "fieldId": "followup_count",
+              "fieldValue": "0"
+            },
+            {
+              "fieldId": "priority_score",
+              "fieldValue": "0"
+            },
+            {
+              "fieldId": "last_action_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        672
+      ],
+      "id": "583a3bb4-a810-4c67-927f-d19515e29b9c",
+      "name": "Create Row Suport Cases",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        864
+      ],
+      "id": "93c0d489-fbb7-4968-8a0d-83ccd45a76c5",
+      "name": "llama 70B Versalite",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Groq Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil data output dari node AI Agent\nconst rawOutput = $input.first().json.output;\n\n// 1. Ekstrak Subjek (Mencari teks setelah \"Subjek:\" hingga baris baru)\nconst subjectMatch = rawOutput.match(/Subjek:\\s*(.*)/i);\nconst subject = subjectMatch ? subjectMatch[1].trim() : \"\";\n\n// 2. Hapus bagian Subjek dari teks utama untuk mempermudah pemisahan sisanya\nlet bodyText = rawOutput.replace(/Subjek:.*\\n*/i, \"\").trim();\n\n// 3. Pisahkan bagian-bagian berdasarkan baris kosong (\\n\\n)\nconst paragraphs = bodyText.split(/\\n\\s*\\n/);\n\n// 4. Identifikasi bagian (Contoh pembagian sederhana)\nconst greeting = paragraphs[0]; // \"Halo Rafi,\"\nconst opening = paragraphs[1];  // \"Terima kasih atas minat...\"\nconst coreMessage = paragraphs[2]; // \"Mengenai permintaan Anda...\"\n\n// 5. Ekstrak daftar pertanyaan (Mencari baris yang dimulai dengan *)\nconst questionsMatch = bodyText.match(/\\*\\s*(.*)/g);\nconst questions = questionsMatch ? questionsMatch.join(\"\\n\") : \"\";\n\n// 6. Ambil salam penutup (biasanya 2 paragraf terakhir)\nconst closing = paragraphs[paragraphs.length - 2];\nconst signOff = paragraphs[paragraphs.length - 1];\n\nreturn {\n  subject: subject,\n  greeting: greeting,\n  opening: opening,\n  message_content: coreMessage,\n  questions: questions,\n  closing: closing,\n  sign_off: signOff,\n  full_clean_body: bodyText\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -144,
+        672
+      ],
+      "id": "a784b91c-2725-4943-8899-5a5bd15c1e9b",
+      "name": "Email Separator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil data dari node sebelumnya\nconst raw = $input.first().json.output;\n\nif (!raw) {\n  return [{\n    json: {\n      intent: \"HUMAN_REVIEW\",\n      urgency: \"LOW\",\n      sentiment: \"NEUTRAL\",\n      budget_detected: false,\n      priority_signal: \"HUMAN_REVIEW\",\n      confidence_score: 0,\n      error: \"Empty AI output\"\n    }\n  }];\n}\n\nlet parsed;\n\n// Jika sudah object (bukan string), langsung pakai\nif (typeof raw === \"object\") {\n  parsed = raw;\n} else {\n  // Jika string, ambil hanya bagian JSON-nya\n  const match = raw.match(/\\{[\\s\\S]*\\}/);\n  \n  if (!match) {\n    return [{\n      json: {\n        intent: \"HUMAN_REVIEW\",\n        urgency: \"LOW\",\n        sentiment: \"NEUTRAL\",\n        budget_detected: false,\n        priority_signal: \"HUMAN_REVIEW\",\n        confidence_score: 0,\n        error: \"No valid JSON found\"\n      }\n    }];\n  }\n\n  try {\n    parsed = JSON.parse(match[0]);\n  } catch (err) {\n    return [{\n      json: {\n        intent: \"HUMAN_REVIEW\",\n        urgency: \"LOW\",\n        sentiment: \"NEUTRAL\",\n        budget_detected: false,\n        priority_signal: \"HUMAN_REVIEW\",\n        confidence_score: 0,\n        error: \"Invalid JSON format\"\n      }\n    }];\n  }\n}\n\n// Return clean structured data\nreturn [{\n  json: {\n    intent: parsed.intent || \"HUMAN_REVIEW\",\n    urgency: parsed.urgency || \"LOW\",\n    sentiment: parsed.sentiment || \"NEUTRAL\",\n    budget_detected: parsed.budget_detected ?? false,\n    priority_signal: parsed.priority_signal || \"HUMAN_REVIEW\",\n    confidence_score: parsed.confidence_score ?? 0\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        192
+      ],
+      "id": "62ac9edd-2fdb-46f9-9d0b-f6952c03a123",
+      "name": "Output Separator"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        144,
+        400
+      ],
+      "id": "3e6b1c21-b885-4cef-81a4-a11e1aab922d",
+      "name": "llama 3.3 70B Versalite",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Groq account FUAD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Take A Data').item.json.email }}",
+        "subject": "={{ $('Edit Fields1').item.json.subject }}",
+        "emailType": "text",
+        "message": "={{ $('Email Separator').item.json.full_clean_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        672
+      ],
+      "id": "8c8b4566-ed31-4348-94d8-f4cb360ef2ce",
+      "name": "Send a message",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "simple": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -672,
+        192
+      ],
+      "id": "947cae39-93e7-4e34-b436-9ab8d8885390",
+      "name": "Get a message",
+      "webhookId": "YOUR_WEBHOOK_ID",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "support_cases",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Create Row Suport Cases').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "WAITING_CUSTOMER"
+            },
+            {
+              "fieldId": "updated_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "last_action_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        304,
+        672
+      ],
+      "id": "4a9ec495-5b8d-4037-bd32-158425c145dc",
+      "name": "Update a Support Case",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "customers",
+        "limit": 1,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1888,
+        432
+      ],
+      "id": "8d6f83f4-116d-4ddf-b650-4b952a281464",
+      "name": "Take A Data",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "customers",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "condition": "eq",
+              "keyValue": "={{ $json.email }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "last_seen_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "total_cases",
+              "fieldValue": "={{ ($json.total_cases || 0) + 1 }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        464
+      ],
+      "id": "b32d00ee-37d6-4ce3-a137-68c594260929",
+      "name": "Update Data Customers",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "customers",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $('Edit Fields').item.json['Email Bersih'] }}"
+            },
+            {
+              "fieldId": "first_seen_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "last_seen_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            },
+            {
+              "fieldId": "total_cases",
+              "fieldValue": "=1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        432
+      ],
+      "id": "a684196c-2d11-4c90-90d7-e68f789d7739",
+      "name": "Add Data Customers",
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "9d1e1e8e-61f8-4e16-9f27-ece62e1a440e",
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1024,
+        448
+      ],
+      "id": "aedcccde-c3ad-474d-9708-cc6dc563f333",
+      "name": "Is There One Yet?"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "customers",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "email",
+              "condition": "eq",
+              "keyValue": "={{ $('Get a message').first().json.from.value[0].address }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        736,
+        448
+      ],
+      "id": "98dbfa04-bbae-4134-91db-ffeb96bcec71",
+      "name": "Check Data",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "YOUR_CREDENTIAL",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "YOUR_MESSAGE_ID",
+          "threadId": "YOUR_THREAD_ID",
+          "snippet": "Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara WhatsApp dan sistem CRM. Saya ingin mengetahui: Apakah",
+          "payload": {
+            "mimeType": "multipart/alternative"
+          },
+          "sizeEstimate": 8232,
+          "historyId": "YOUR_HISTORY_ID",
+          "internalDate": "1771658400000",
+          "labels": [
+            {
+              "id": "INBOX",
+              "name": "INBOX"
+            },
+            {
+              "id": "CATEGORY_PERSONAL",
+              "name": "CATEGORY_PERSONAL"
+            },
+            {
+              "id": "UNREAD",
+              "name": "UNREAD"
+            }
+          ],
+          "From": "Luxe Lint <YOUR_EMAIL>",
+          "Subject": "Test",
+          "To": "YOUR_EMAIL"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "Get a message": [
+      {
+        "json": {
+          "id": "YOUR_MESSAGE_ID",
+          "threadId": "YOUR_THREAD_ID",
+          "labelIds": [
+            "UNREAD",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "sizeEstimate": 8232,
+          "headers": {
+            "delivered-to": "Delivered-To: YOUR_EMAIL",
+            "received": "Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])\r\n        by mx.google.com with SMTPS id a640c23a62f3a-b9084f58156sor22642766b.13.2026.02.20.23.20.11\r\n        for <YOUR_EMAIL>\r\n        (Google Transport Security);\r\n        Fri, 20 Feb 2026 23:20:11 -0800 (PST)",
+            "x-received": "X-Received: by 2002:a17:907:6e8f:b0:b73:544d:b963 with SMTP id\r\n a640c23a62f3a-b90819c964cmr116982666b.13.1771658410670; Fri, 20 Feb 2026\r\n 23:20:10 -0800 (PST)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; t=1771658411; cv=none;\r\n        d=google.com; s=arc-20240605;\r\n        b=OR8aaoAy6QIRauvwshCxWOjvZRN7vKs3ZTk8+KsU5VLniIH+CtAtICDqNIhWnLBGZr\r\n         GtuMeNRTQP5YsfTgOpW9pw7+JbMSY8CZj1s1nU2YsTtmKpJMhEDqKXb4XEBe1UqUSbMd\r\n         0XFhmHTxwsECifxSEFDEX+yn1Km5NpSOyMt6HyLU1A8xJeY650D1KoCkbF9GiFNHglGH\r\n         IlAJ5PeiPNWdQR3OvGzSPDefMr0RXcaiIZrNLVh8Lr0xAccnAnpF8K2+2VNZCzbJfEDE\r\n         mFt0mYmdOEKDXmJrKhcxJDKlz0ui4wzEPZc6KwD9f5sCoJhf6BdIx+CnYZIeSOPvGkfd\r\n         6LBA==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;\r\n        h=to:subject:message-id:date:from:mime-version:dkim-signature;\r\n        bh=+QfyGa6ihS6Ih02eO2He4NaUC4CjtWrAknHDLkI6dWs=;\r\n        fh=6BAE5nb8xXOkb4r//w4+pOC9xwIn7o4V//MEjOtuBpA=;\r\n        b=CStruRa0s3ba5Hg8TJZE9Q3rMfavuJhYAEuxlEpxNhT3WK4UBas9cxynSHXKNQzFII\r\n         zTKUw5JPOWKvfZWRqc7pfdCz1osfee6aTDBHaRLtvT/fTukUxE63KtEqPNLB7AXwZvLC\r\n         3fGf88dFUZA790AgMptnWDu3E7BzocVehHAmQY/hvcnsfznHjC2OK5yVjvMkfzRxNReQ\r\n         lILPVfE1ew78tkcAqRdmYlII5MroJsyzAENibdNezDvK80Busno5DLX+kQl498gNaE7I\r\n         yokiNmcKudMHmlGRl2xpoVAhD0VhccDgyLQhSngRVGM9K/U06cijAYuUsL7MSTwDeO4U\r\n         Mdgw==;\r\n        dara=google.com",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.google.com; arc=none",
+            "return-path": "Return-Path: <YOUR_EMAIL>",
+            "received-spf": "Received-SPF: pass (google.com: domain of YOUR_EMAIL designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;",
+            "authentication-results": "Authentication-Results: mx.google.com;\r\n       dkim=pass header.i=@gmail.com header.s=20230601 header.b=JJEwhL5W;\r\n       arc=pass (i=1);\r\n       spf=pass (google.com: domain of YOUR_EMAIL designates 209.85.220.41 as permitted sender) smtp.mailfrom=YOUR_EMAIL;\r\n       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;\r\n       dara=pass header.i=@gmail.com",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=gmail.com; s=20230601; t=1771658411; x=1772263211; dara=google.com;\r\n        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject\r\n         :date:message-id:reply-to;\r\n        bh=+QfyGa6ihS6Ih02eO2He4NaUC4CjtWrAknHDLkI6dWs=;\r\n        b=JJEwhL5WP/+tio/22SWyxJTszTXwnIJlYCCvQCgZgq+WAn4Wp9vOdOyYD++yHrcZ/j\r\n         JgBLgZ6gpn0Uoa8spQ7o7TAVoPzl0Ce2Y+fwg95c9yNEfZlDnU1doie9/nTS/E3a76RV\r\n         9Zs2pkEWPComEYl95p6jFumSI3mzSONy2zl3FPZTg3WH5dXsjG0/pjEFt+oOKHwfKE+E\r\n         4Sk/8sEO4yqtsvSeUnfZr+JoSTcdcwyUrCLb/jRBKoVK/ob3kong5ZpHjcGhHAGQerNJ\r\n         brTc5VzoW4uwrpiSbsQYm+0PFvAnF4u6eGX7BhF+rjR4C6Qen3LV2oofTUray4FJORGD\r\n         odng==",
+            "x-google-dkim-signature": "X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=1e100.net; s=20230601; t=1771658411; x=1772263211;\r\n        h=to:subject:message-id:date:from:mime-version:x-gm-gg\r\n         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;\r\n        bh=+QfyGa6ihS6Ih02eO2He4NaUC4CjtWrAknHDLkI6dWs=;\r\n        b=nET8C7VGU8Xcy1aRjSaYbA4Bfd00h1HwZGMpK92fey6WB/yq8XGn8Sgo6xKClWpxXl\r\n         a7lNXhzaxUus/HtzMcfeOPmUP5/v5oRp/Rus0jb2a9le+Ky1FD7huYuTG//sVq4ioALo\r\n         1duhAkZ27MHd+xHX+QjVTwSzYftSthU94gKV6yI8sNfdBbb7i1FmxkcHrzX5bCwjJ19h\r\n         n4ndZcjhXry08P2M0MujrxaoNowkXOev8mehYCGEn3iNmTNDjegyAdVjk6YqhCUEJZ+8\r\n         EepbhSv0AGK/nerU2JbXHoQw7tgccM0kqersQ7hZJmu/MUs08QGMOPr2dnhEwRNwqoGp\r\n         4ZCQ==",
+            "x-gm-message-state": "X-Gm-Message-State: AOJu0YwgRf1pKBnus9mxKmK35wxnWU9xwSyqKRSDp63x+ongW1ei3/ET\r\n\tVX/+feApRXNnGyp1DHCzYREsy+2/8hQ3lNDg7tG2fH1Q/KIoq+lY1aUxqEyEa/0Si4e8UtwV/G4\r\n\t+zD+zYlE9PlOuvpMxGYuRVnTNzPYcZI6MPuNR",
+            "x-gm-gg": "X-Gm-Gg: AZuq6aLPOSYVK0ob4AjbbIiEitGMt2y6cRvS4ebui1lCStxIj9fA6CkDViRRY2GWHiX\r\n\t3w/nwaJ5J1lgpxZSF2n2+76e/TiexbldJHzJDRMnO+vRfL8Q5kz/Im52MpC/xwxcNOInBxYjao5\r\n\ttDA8TYWo9tz6aiIURUowyFsBy97BBV+1WgfwywASDgGfL7d6ACwW84RZR+DzcZ6MZcaLuMPcklu\r\n\tCtMcDr6biEI/NU79wTT/islN+SHARdeuIy+ItqosNMKP0gE6AudeKYiOfqRHxtlvw2jV6qvqT4B\r\n\tXAQYFBAVjkgo7s1JLnc=",
+            "mime-version": "MIME-Version: 1.0",
+            "from": "From: Luxe Lint <YOUR_EMAIL>",
+            "date": "Date: Sat, 21 Feb 2026 14:20:00 +0700",
+            "x-gm-features": "X-Gm-Features: AaiRm53BuEPl8eyb_v3bBGUCN4N-VkcZuQOLmGwoGSQYEU0qcOtsEE8wTu86WZc",
+            "message-id": "Message-ID: <YOUR_MESSAGE_ID>",
+            "subject": "Subject: Test",
+            "to": "To: YOUR_EMAIL",
+            "content-type": "Content-Type: multipart/alternative; boundary=\"0000000000003b3d1f064b505ee0\""
+          },
+          "html": "<div dir=\"ltr\">Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara WhatsApp dan sistem CRM.<br><br>Saya ingin mengetahui:<br><br>Apakah sistem Anda dapat mengelola pesan masuk secara otomatis?<br><br>Apakah tersedia fitur pencatatan histori percakapan pelanggan?<br><br>Apakah sistem dapat mengkategorikan pesan seperti hot lead, general inquiry, atau complaint?<br><br>Berapa estimasi waktu implementasi untuk bisnis skala kecil?<br><br>Mohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.<br><br>Terima kasih atas bantuannya.<br><br>Salam,<br>Rafi</div>\n",
+          "text": "Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi\nuntuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara\nWhatsApp dan sistem CRM.\n\nSaya ingin mengetahui:\n\nApakah sistem Anda dapat mengelola pesan masuk secara otomatis?\n\nApakah tersedia fitur pencatatan histori percakapan pelanggan?\n\nApakah sistem dapat mengkategorikan pesan seperti hot lead, general\ninquiry, atau complaint?\n\nBerapa estimasi waktu implementasi untuk bisnis skala kecil?\n\nMohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.\n\nTerima kasih atas bantuannya.\n\nSalam,\nRafi\n",
+          "textAsHtml": "<p>Perkenalkan, saya Rafi dari LuxeLint. Saat ini saya sedang mencari solusi<br/>untuk mengotomatiskan komunikasi bisnis kami, khususnya integrasi antara<br/>WhatsApp dan sistem CRM.</p><p>Saya ingin mengetahui:</p><p>Apakah sistem Anda dapat mengelola pesan masuk secara otomatis?</p><p>Apakah tersedia fitur pencatatan histori percakapan pelanggan?</p><p>Apakah sistem dapat mengkategorikan pesan seperti hot lead, general<br/>inquiry, atau complaint?</p><p>Berapa estimasi waktu implementasi untuk bisnis skala kecil?</p><p>Mohon informasi lebih lanjut terkait fitur dan penawaran yang tersedia.</p><p>Terima kasih atas bantuannya.</p><p>Salam,<br/>Rafi</p>",
+          "subject": "Test",
+          "date": "2026-02-21T07:20:00.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "YOUR_EMAIL",
+                "name": ""
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><a href=\"mailto:YOUR_EMAIL\" class=\"mp_address_email\">YOUR_EMAIL</a></span>",
+            "text": "YOUR_EMAIL"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "YOUR_EMAIL",
+                "name": "Luxe Lint"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Luxe Lint</span> &lt;<a href=\"mailto:YOUR_EMAIL\" class=\"mp_address_email\">YOUR_EMAIL</a>&gt;</span>",
+            "text": "\"Luxe Lint\" <YOUR_EMAIL>"
+          },
+          "messageId": "<YOUR_MESSAGE_ID>"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Output Separator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manual Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Email Separator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Update a Support Case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 2.5 Fash": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Row Suport Cases": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llama 70B Versalite": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Separator": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Output Separator": {
+      "main": [
+        [
+          {
+            "node": "Check Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "llama 3.3 70B Versalite": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a message": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a Support Case": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Take A Data": {
+      "main": [
+        [
+          {
+            "node": "Create Row Suport Cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Data Customers": {
+      "main": [
+        [
+          {
+            "node": "Take A Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data Customers": {
+      "main": [
+        [
+          {
+            "node": "Take A Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is There One Yet?": {
+      "main": [
+        [
+          {
+            "node": "Add Data Customers",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Data Customers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Data": {
+      "main": [
+        [
+          {
+            "node": "Is There One Yet?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID",
+  "meta": {
+    "instanceId": "YOUR_INSTANCE_ID"
+  },
+  "id": "YOUR_WORKFLOW_ID",
+  "tags": []
+}
