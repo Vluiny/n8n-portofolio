@@ -1,7 +1,3 @@
----
-https://github.com/Vluiny/n8n-portofolio/blob/2b9f2997e95f08fdb46c578109abd1b8652bf1bd/Free%20Templates/Lite%20Versions/ATS%20Lite%20Versions/Screenshot%202026-03-20%20112338.png
----
-
 # 🧩 n8n Free Templates - Mini ATS (Lite Version)
 
 A collection of **free, simplified n8n workflows** designed to demonstrate practical automation use cases.
