@@ -14,5 +14,5 @@ All workflows are in `.json` format, exported directly from n8n.
 5. Adjust any node settings if needed, then activate or test the workflow.
 
 ## 📬 Contact 
-- LinkedIn: [linkedin.com/in/yourprofile](www.linkedin.com/in/restu-pambudi-6b190a386)
+- LinkedIn:www.linkedin.com/in/restu-pambudi-6b190a386
 - - Email: restupambudi.dev@gmail.com
