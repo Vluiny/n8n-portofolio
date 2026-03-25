@@ -1,0 +1,277 @@
+{
+  "name": "End Of Day Summary",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -96,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "YOUR_EMAIL_HERE",
+          "mode": "list",
+          "cachedResultName": "YOUR_EMAIL_HERE"
+        },
+        "timeMin": "={{ $now.startOf('day').toISO() }}",
+        "timeMax": "={{ $now.endOf('day').toISO() }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        -176
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Get many events",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {
+          "receivedAfter": "={{$now.startOf('day')}}"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Get many messages",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        576,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get data and ensure consistent format\nconst items = $input.all();\n\n// Filter meetings\nconst calendarEvents = items.filter(item => item.json.kind === 'calendar#event' || item.json.iCalUID);\n\n// Filter emails (not meetings)\nconst emailMessages = items.filter(item => item.json.threadId && item.json.kind !== 'calendar#event');\n\n// ========== FORMAT MEETINGS ==========\nlet meetingsText = '';\nlet meetingsCompleted = 0;\nlet meetingsUpcoming = 0;\nconst now = new Date();\n\nfor (let i = 0; i < calendarEvents.length; i++) {\n  const event = calendarEvents[i].json;\n  const startTime = new Date(event.start.dateTime);\n  const endTime = new Date(event.end.dateTime);\n  \n  const timeRange = `${startTime.getHours().toString().padStart(2,'0')}:${startTime.getMinutes().toString().padStart(2,'0')} - ${endTime.getHours().toString().padStart(2,'0')}:${endTime.getMinutes().toString().padStart(2,'0')}`;\n  \n  let status = '';\n  if (endTime < now) {\n    status = '✓ completed';\n    meetingsCompleted++;\n  } else if (startTime > now) {\n    status = '⏭ upcoming';\n    meetingsUpcoming++;\n  } else {\n    status = '🔴 in progress';\n  }\n  \n  meetingsText += `• ${timeRange} - ${event.summary} (${status})\\n`;\n}\n\nif (calendarEvents.length === 0) {\n  meetingsText = 'No meetings today';\n}\n\n// ========== FORMAT EMAILS ==========\nlet emailsText = '';\nlet importantCount = 0;\nlet importantEmailsList = '';\n\nfor (let i = 0; i < emailMessages.length; i++) {\n  const email = emailMessages[i].json;\n  \n  const isUnread = email.labels && email.labels.includes('UNREAD');\n  \n  if (isUnread) {\n    importantCount++;\n    importantEmailsList += `• ${email.From || email.from}: ${email.Subject || email.subject}\\n`;\n  }\n  \n  emailsText += `• ${email.From || email.from}: ${email.Subject || email.subject}\\n`;\n}\n\nif (emailMessages.length === 0) {\n  emailsText = 'No emails received today';\n}\n\nif (importantCount === 0) {\n  importantEmailsList = 'No important unread emails';\n}\n\n// ========== FORMAT DATE ==========\nconst today = new Date();\nconst days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];\nconst months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];\n\nconst dateFormatted = `${days[today.getDay()]}, ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;\n\n// ========== OUTPUT ==========\nreturn {\n  date: dateFormatted,\n  meetings_text: meetingsText,\n  meetings_total: calendarEvents.length,\n  meetings_completed: meetingsCompleted,\n  meetings_upcoming: meetingsUpcoming,\n  emails_text: emailsText,\n  emails_total: emailMessages.length,\n  important_count: importantCount,\n  important_list: importantEmailsList\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        784,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior executive assistant. Create a professional and easy-to-read End of Day Summary report.\n\nREPORT DATA:\nDate: {{$json.date}}\nMeetings: {{$json.meetings_text}}\nTotal Meetings: {{$json.meetings_total}}\nCompleted Meetings: {{$json.meetings_completed}}\nUpcoming Meetings: {{$json.meetings_upcoming}}\nEmails: {{$json.emails_text}}\nTotal Emails: {{$json.emails_total}}\nImportant Emails: {{$json.important_count}}\nImportant Email List: {{$json.important_list}}\n\nINSTRUCTIONS:\n1. Create a clean report using emojis\n2. If no meetings, state positively\n3. If there are important emails, highlight them\n4. Provide a short recommendation for tomorrow\n5. Use professional but warm tone\n\nOUTPUT FORMAT:\n\n📊 END OF DAY SUMMARY\n🗓️ [date]\n\n━━━━━━━━━━━━━━━━━━━━━\n\n📌 MEETINGS TODAY ([count]):\n[meeting list with status]\n\n━━━━━━━━━━━━━━━━━━━━━\n\n📧 EMAIL ACTIVITY:\n📥 Total received: [count]\n⭐ Important: [count]\n[important email list if any]\n\n━━━━━━━━━━━━━━━━━━━━━\n\n💡 RECOMMENDATION:\n[1 sentence recommendation]\n\nHave a great evening! 🚀",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        992,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        992,
+        80
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get raw output from AI\nconst rawOutput = $input.first().json.output;\n\n// Clean the output\nconst cleanOutput = rawOutput\n  .replace(/\\\\n/g, ' ')\n  .replace(/\\n/g, ' ')\n  .replace(/\\s\\s+/g, ' ')\n  .trim();\n\n// Return as single key\nreturn {\n  clean_summary: cleanOutput\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.clean_summary }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        -96
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Send a text message",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many events",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID_HERE",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID_HERE"
+  },
+  "id": "YOUR_WORKFLOW_ID_HERE",
+  "tags": []
+}
