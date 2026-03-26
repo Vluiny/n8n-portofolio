@@ -1,0 +1,562 @@
+{
+  "name": "Meeting Action Items Extractor",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Anda adalah asisten eksekutif yang mengekstrak action items dari catatan meeting.\n\nCatatan meeting:\n{{ $json.message.text }}{{ $json.content.parts[0].text }}\n\nTugas:\n1. Identifikasi semua action items/tugas\n2. Untuk setiap tugas, tentukan:\n   - Task: apa yang harus dilakukan\n   - Assignee: siapa yang bertanggung jawab (jika disebut)\n   - Due Date: kapan deadline-nya (jika disebut, format YYYY-MM-DD)\n3. Jika assignee tidak disebut, gunakan \"Unassigned\"\n4. Jika due date tidak disebut, gunakan \"No deadline\"\n\n{\n  \"meeting_date\": \"time in hours and minute and date if there is\",\n  \"action_items\": [\n    {\n      \"task\": \"string\",\n      \"assignee\": \"string\",\n      \"due_date\": \"string or null\"\n    }\n  ]\n}\n\nJANGAN MENGGUNAKAN ````\n\nJIKA CATATAN TIDAK BERKAITAN DENGAN MEETING, JAWAB \"NULL\"\n\nIKUTI INSTRUKSI OUTPUT ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        816,
+        192
+      ],
+      "id": "3a3f82bc-e70a-4857-b95d-0c62037a0920",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        816,
+        384
+      ],
+      "id": "705db2c6-9486-45aa-869e-e442a304882b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "sxyU3ZiIDLn1gOir",
+          "name": "Groq Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Ambil output mentah dari AI\nconst rawOutput = $input.first().json.output || \"\";\n\ntry {\n  // 2. Gunakan REGEX untuk mengambil konten di antara { dan } saja\n  // Ini akan membuang teks \"Berikut adalah...\" atau \"```\" di awal/akhir\n  const jsonMatch = rawOutput.match(/\\{[\\s\\S]*\\}/);\n  \n  if (!jsonMatch) {\n    throw new Error(\"Tidak ditemukan format JSON dalam output.\");\n  }\n\n  // 3. Bersihkan karakter kontrol (seperti \\n atau spasi berlebih) sebelum di-parse\n  const cleanJsonString = jsonMatch[0].replace(/\\\\n/g, ' ');\n  const parsedData = JSON.parse(cleanJsonString);\n\n  // 4. Transformasi menjadi item n8n yang berpisah (5-10 items)\n  // Ini agar datanya TIDAK BERTUMPUK lagi.\n  return parsedData.action_items.map(item => {\n    return {\n      json: {\n        task: item.task,\n        assignee: item.assignee,\n        due_date: item.due_date,\n        meeting_date: parsedData.meeting_date || \"N/A\"\n      }\n    };\n  });\n\n} catch (error) {\n  // Jika gagal total, keluarkan error agar flow tidak berhenti tanpa info\n  return {\n    json: {\n      error: \"Gagal Parsing: \" + error.message,\n      raw_text: rawOutput\n    }\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        176
+      ],
+      "id": "8decc1eb-6803-4281-a76a-8c7422b4498f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f6f62d1-0ec8-4728-81e0-5de4d28d821b",
+              "name": "task",
+              "value": "={{ $json.task }}",
+              "type": "string"
+            },
+            {
+              "id": "105bf55d-da4c-4f24-a820-71c0171839a7",
+              "name": "assignee",
+              "value": "={{ $json.assignee }}",
+              "type": "string"
+            },
+            {
+              "id": "46d3049d-9483-4eb6-86d2-099a815e83c8",
+              "name": "due_date",
+              "value": "={{ $json.due_date }}",
+              "type": "string"
+            },
+            {
+              "id": "e1f10604-b054-40e7-8885-dfc1191ec4d1",
+              "name": "Status",
+              "value": "pending",
+              "type": "string"
+            },
+            {
+              "id": "5c2bae2c-1943-49da-b847-b4d71783abf2",
+              "name": "created_at",
+              "value": "={{ $now.format('dd-MM-yyyy hh:mm:ss') }}",
+              "type": "string"
+            },
+            {
+              "id": "443616a1-3f40-4a41-a2f7-d20c1e912c05",
+              "name": "submittet_by",
+              "value": "telegram_user",
+              "type": "string"
+            },
+            {
+              "id": "0cb064c1-f81f-4652-af7c-962c9b849e46",
+              "name": "meeting_date",
+              "value": "={{ $json.meeting_date }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1792,
+        176
+      ],
+      "id": "b523eff7-2b6f-43ba-86da-6a622340b722",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1gQ4Yd2L0w3N_WbGoqtnz0KJyo3xjBDi11Fhndturaa0",
+          "mode": "list",
+          "cachedResultName": "Meeting Sumary",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gQ4Yd2L0w3N_WbGoqtnz0KJyo3xjBDi11Fhndturaa0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gQ4Yd2L0w3N_WbGoqtnz0KJyo3xjBDi11Fhndturaa0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Task": "={{ $json.task }}",
+            "Assignee": "={{ $json.assignee }}",
+            "Due Date": "={{ $json.due_date }}",
+            "Status": "={{ $json.Status }}",
+            "Created At": "={{ $json.created_at }}",
+            "Submitted By": "={{ $json.submittet_by }}",
+            "Meeting Date": "={{ $json.meeting_date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Task",
+              "displayName": "Task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Due Date",
+              "displayName": "Due Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created At",
+              "displayName": "Created At",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted By",
+              "displayName": "Submitted By",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Meeting Date",
+              "displayName": "Meeting Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2000,
+        176
+      ],
+      "id": "8ce98af6-a80c-434f-8283-00c63bbf8e89",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Kld5hd7v2FBmS4Qm",
+          "name": "Google Sheets FUAD"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        192
+      ],
+      "id": "cad263c0-df18-47e0-801d-42cbe763a549",
+      "name": "Telegram Trigger",
+      "webhookId": "01e8e5bd-2288-4528-b5e9-d27423b1ae39",
+      "credentials": {
+        "telegramApi": {
+          "id": "MBe1WDS9PPscV5y5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5cb62f09-d256-40de-9b22-319a60ba3d2c",
+              "leftValue": "={{ $json.message.voice.mime_type }}",
+              "rightValue": "audio",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        192
+      ],
+      "id": "59266045-97a9-46b7-b5a2-fb1b7461ab15",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-lite",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-lite"
+        },
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        0
+      ],
+      "id": "3299b141-1916-48a8-89e7-9309ccd17da4",
+      "name": "Transcribe a recording",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "k0vjXrdjtOr7U9Fr",
+          "name": "Google Gemini(PaLM) Api account Luxelint"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "1a488e50-f273-44ac-a808-435fb591cf6b",
+      "name": "Get a file",
+      "webhookId": "72ce78fc-92c4-4b0b-b016-e8407d8851d6",
+      "credentials": {
+        "telegramApi": {
+          "id": "MBe1WDS9PPscV5y5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        512,
+        192
+      ],
+      "id": "3c2e1d85-17f8-4ba3-b5d2-311a2b0e4777",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "chatId": "96769870",
+        "text": "the data has been entered into the table",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2400,
+        176
+      ],
+      "id": "598201e2-970f-44f5-b070-2e25772946d9",
+      "name": "Send a text message",
+      "webhookId": "f4b7b026-9ffc-4ea3-8c6f-d8f3645483e1",
+      "credentials": {
+        "telegramApi": {
+          "id": "MBe1WDS9PPscV5y5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7d11fdc0-c553-43d4-b605-130f948e67d1",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "NULL",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        192
+      ],
+      "id": "46a7747b-9d3b-4210-8d8c-ce61c66a7da3",
+      "name": "If1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        176
+      ],
+      "id": "3fa64af9-e957-4824-8ad5-0258e7518c50",
+      "name": "Limit"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Transcribe a recording",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe a recording": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6beba898-fe52-47e1-a015-5f24e6d5a5ee",
+  "meta": {
+    "instanceId": "b4c80c5ad2919dcf405cae62b00140da7a93ec0ca875c33075793b87e1d8d9a4"
+  },
+  "id": "iUs5aoCVNMt66xBuwnPZf",
+  "tags": []
+}
