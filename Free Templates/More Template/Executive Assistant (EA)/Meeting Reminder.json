@@ -1,0 +1,261 @@
+{
+  "name": "Meeting Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "start.dateTime",
+              "value": "={{ $json.start.dateTime }}",
+              "type": "string"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "summary",
+              "value": "={{ $json.summary }}",
+              "type": "string"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "attendees[0].email",
+              "value": "={{ $json.attendees[0].email }}",
+              "type": "string"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "attendees[1].email",
+              "value": "={{ $json.attendees[1].email }}",
+              "type": "string"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "attendees[2].email",
+              "value": "={{ $json.attendees[2].email }}",
+              "type": "string"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "attendees[3].email",
+              "value": "={{ $json.attendees[3].email }}",
+              "type": "object"
+            },
+            {
+              "id": "YOUR_ASSIGNMENT_ID_HERE",
+              "name": "attendees[4].email",
+              "value": "={{ $json.attendees[4].email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        400,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get attendees data from input\nconst input = $input.first().json;\nconst attendees = input.attendees || [];\n\n// Extract names from emails\nconst extractedNames = attendees\n  .filter(p => p && p.email)\n  .map(p => {\n    const parts = p.email.split('@');\n    const username = parts[0];\n\n    // Clean up name (e.g., restu.pambudi -> Restu Pambudi)\n    const cleanName = username\n      .replace(/[._-]/g, ' ')\n      .replace(/\\b\\w/g, l => l.toUpperCase());\n\n    return {\n      original_email: p.email,\n      name_from_email: cleanName\n    };\n  });\n\n// Return as object\nreturn {\n  participants: extractedNames,\n  names_list: extractedNames.map(p => p.name_from_email).join(', ')\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        624,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an executive assistant helping the boss prepare for a meeting.\n\nMEETING DATA:\nTitle: {{ $('Edit Fields').item.json.summary }}\nAttendees: {{ $json.names_list }}\n\nTasks:\n1. Identify meeting context (Internal / External / Client / Vendor)\n2. Provide preparation suggestions based on attendees\n\nOutput format JSON:\n{\n  \"context\": \"Internal / External / Client / Vendor\",\n  \"suggestions\": [\"suggestion 1\", \"suggestion 2\", \"suggestion 3\"],\n  \"summary\": \"1 short summary sentence\"\n}\n\nOUTPUT JSON ONLY. NO EXTRA TEXT.\n\nDO NOT USE ```",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        928,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        928,
+        208
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get output from previous AI node\nconst rawOutput = $input.first().json.output;\n\ntry {\n  const cleanJson = JSON.parse(rawOutput.replace(/\\\\n/g, ' '));\n\n  return {\n    context: cleanJson.context,\n    summary: cleanJson.summary,\n    suggestions_text: cleanJson.suggestions.map(s => `• ${s}`).join('\\n'),\n    suggestions_raw: cleanJson.suggestions\n  };\n} catch (error) {\n  return {\n    error: \"Failed to parse JSON\",\n    raw_text: rawOutput\n  };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1280,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "text": "=🔔 SMART MEETING REMINDER ⏰ 15 minutes left! \n\n📋 Meeting with {{ $('Code in JavaScript').item.json.names_list }} requires thorough preparation to achieve effective results.\n\n🏢 Context: {{ $json.context }}\n\n💡 Preparation Suggestions: \n{{ $json.suggestions_raw[0] }}\n{{ $json.suggestions_raw[1] }}\n{{ $json.suggestions_raw[2] }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1584,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Send a text message",
+      "webhookId": "YOUR_WEBHOOK_ID_HERE",
+      "credentials": {
+        "telegramApi": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "calendarId": {
+          "__rl": true,
+          "value": "YOUR_EMAIL_HERE",
+          "mode": "list",
+          "cachedResultName": "YOUR_EMAIL_HERE"
+        },
+        "triggerOn": "eventStarted",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTrigger",
+      "typeVersion": 1,
+      "position": [
+        112,
+        16
+      ],
+      "id": "YOUR_NODE_ID_HERE",
+      "name": "Google Calendar Trigger",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID_HERE",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "YOUR_VERSION_ID_HERE",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "YOUR_INSTANCE_ID_HERE"
+  },
+  "id": "YOUR_WORKFLOW_ID_HERE",
+  "tags": []
+}
