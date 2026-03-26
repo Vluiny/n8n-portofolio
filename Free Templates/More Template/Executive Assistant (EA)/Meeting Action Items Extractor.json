@@ -1,5 +1,5 @@
 {
-  "name": "Meeting Summary",
+  "name": "Meeting Action Items Extractor",
   "nodes": [
     {
       "parameters": {
